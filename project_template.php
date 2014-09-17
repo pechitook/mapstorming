@@ -74,8 +74,6 @@ function addDataset($dataset)
 	newline();
 }
 
-
-// Begin collecting data to generate project.mml file
 // write("***************\nWELCOME MESSAGE!\n***************", $colorPregunta);
 // newline();
 // newline();
@@ -121,6 +119,10 @@ function addDataset($dataset)
 // write("Max Zoom: ");
 // $data['__MaxZoom'] = saveInput();
 
+
+// Data is hardcoded for now, but uncommenting above will
+// gather all this information by interacting with the user
+
 $data['__City'] = 'Bogotá';
 $data['__Country'] = 'Colombia';
 $data['__BikestormingId'] = 'bgt';
@@ -134,7 +136,7 @@ $data['__CenterZoom'] = 13;
 $data['__MinZoom'] = 11;
 $data['__MaxZoom'] = 17;
 
-
+// Ask user which dataset wants to process
 newline();
 write("Almost done. Now, which datasets do you want to process? Type {$colorHighlight}list{$colorPregunta} to see which you can use!\nWhen you finish, type {$colorHighlight}done{$colorPregunta} to continue", $colorPregunta);
 newline();
