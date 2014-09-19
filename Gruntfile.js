@@ -7,10 +7,10 @@ module.exports = function (grunt) {
    */
   var config = {
     // EDIT ONLY THIS -->
-    tileMillPath: '/Applications/TileMill.app/Contents/Resources/',
-    tileMillDocumentPath: '/Users/user/Documents/MapBox/project/',
+    tileMillDocumentPath: '/Users/__YOUR_MAC_USER__/Documents/MapBox/project/',
     syncAccount: 'bbx',
     // <-- EDIT ONLY THIS
+    tileMillPath: '/Applications/TileMill.app/Contents/Resources/',
     outputMBTiles: __dirname + '/tilemill_project/mbtiles/',
     datasetPath: __dirname + '/tilemill_project/datasets/',
     projectTemplate: __dirname + '/tilemill_project/template/',
