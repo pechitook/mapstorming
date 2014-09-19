@@ -7,9 +7,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Helper\Helper;
 use Symfony\Component\Console\Input\Input;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\Output;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
@@ -72,9 +70,17 @@ class ProcessDatasets extends Command {
 
         $this->project->create($city, $layers);
 
-        $output->writeln("\n<say>tilemill_project/template/project.mml properly configured.</say>");
-        $output->writeln("<say>Now, simply run <high>grunt exportMbtiles</high> to generate them,\n or <high>grunt uploadMbtiles</high> to directly upload them to Mapbox</say>");
+        $question = new ConfirmationQuestion(
+            "\n<ask>Do you want to <high>upload</high> the resulting mbtiles to Mapbox? (yes/no): </ask>",
+            false
+        );
+        $upload = $helper->ask($input, $output, $question);
 
+        if ($upload){
+            return system('grunt uploadMbtiles');
+        }
+
+        return system('grunt exportMbtiles');
     }
 
     /**
@@ -148,7 +154,7 @@ class ProcessDatasets extends Command {
 
         $cityName = $helper->ask($input, $output, $question);
 
-        $output->writeln("<say><high>$cityName</high> it is!</say>");
+        $output->writeln("\n<say>*** <high>$cityName</high> it is! ***</say>");
 
         return $this->getCityByName($cityName);
 
