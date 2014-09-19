@@ -226,7 +226,7 @@ class ProcessDatasets extends Command {
 
     private function askToProcessAllLayers($layers, Input $input,Output $output, Helper $helper, $directory)
     {
-        $output->writeln("\n<say>This are all the datasets ready to be processed on <high>".$directory."</high>:</say>");
+        $output->writeln("\n<say>These are all the datasets ready to be processed on <high>".$directory."</high>:</say>");
         foreach($layers as $layer){
             $output->writeln("- $layer");
         }
