@@ -3,6 +3,13 @@ Mapstorming
 
 Grunt task to export and/or upload mbtiles to mapbox.
 
+
+###Add a new City
+
+~~~
+$ php mapstorming.php add-city
+~~~
+
 ###Create Tilemill project
 
 Execute CLI and follow instructions:
@@ -11,11 +18,6 @@ Execute CLI and follow instructions:
 $ php mapstorming.php process
 ~~~
 
-###Add a new City
-
-~~~
-$ php mapstorming.php add-city
-~~~
 
 ###Export MBTiles to tilemill_project/mbtiles
 
