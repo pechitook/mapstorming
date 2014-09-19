@@ -36,3 +36,5 @@ tilemill_project/datasets/*
 .idea
 *.mbtiles
 *.geojson
+*.export
+*.export-failed
