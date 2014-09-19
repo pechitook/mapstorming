@@ -53,7 +53,8 @@ class ProcessDatasets extends Command {
         if ($this->useLoadedCity($input, $output, $helper)) {
             $city = $this->selectCity($input, $output, $helper);
 		}else{
-            $this->addNewCity($output);
+            $output->writeln("<say>Please use <high>add-city</high> command to add a new city, then try again.</say>");
+            return false;
         }
 
         $datasetsDir = 'tilemill_project/datasets/'.$city->bikestormingId.'/';
@@ -156,7 +157,7 @@ class ProcessDatasets extends Command {
 
         $output->writeln("\n<say>*** <high>$cityName</high> it is! ***</say>");
 
-        return $this->getCityByName($cityName);
+        return $this->city->getByName($cityName);
 
     }
 
@@ -236,15 +237,5 @@ class ProcessDatasets extends Command {
     private function addNewCity(Output $output)
     {
         $output->writeln("<say>Ok, let's add a new city then!</say>");
-    }
-
-    private function getCityByName($cityName)
-    {
-        $cities = $this->city->getAll();
-        foreach ($cities as $city){
-            if ($city->name == $cityName){
-                return $city;
-            }
-        }
     }
 }

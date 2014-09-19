@@ -29,4 +29,13 @@ class City {
         }
         return $arr;
     }
+
+    public function getByName($cityName)
+    {
+        foreach ($this->all as $city){
+            if ($city->name == $cityName){
+                return $city;
+            }
+        }
+    }
 }

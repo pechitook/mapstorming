@@ -43,6 +43,9 @@ class AddNewCity extends Command {
         $output = $this->setOutputFormat($output);
         // Helper to ask questions through Console
         $helper = $this->getHelper('question');
+
+        $output->writeln("<say>Cool! Let's add a new city to Bikestorming :)</say>");
+        $output->writeln("<say>Please answer this:</say>");
         $city = new \StdClass();
 
         // TODO: Make numbers be stored as double;
