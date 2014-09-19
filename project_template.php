@@ -6,6 +6,9 @@ $colorHighlight = "\033[1;32m";
 // Initialize array where data will be stored
 $data = [];
 
+// Get cities. TODO: Replace with API call
+$cities = json_decode(file_get_contents('cities.json'))->data;
+
 // All possible layers. TODO: Replace with API call,
 $layers = array(
 	'bike_shop',
@@ -53,6 +56,13 @@ function listDatasets(){
 	echo "- ".join("\n- ", $layers)."\n";
 }
 
+function listCities(){
+	global $cities;
+	foreach ($cities as $city) {
+		echo "- {$city->name}\n";
+	}
+}
+
 // display an incorrect value
 function incorrectValue($input){
 	echo "\033[0;31mWrong value: $input $defaultColor \n";
@@ -74,7 +84,20 @@ function addDataset($dataset)
 	newline();
 }
 
-// write("***************\nWELCOME MESSAGE!\n***************", $colorPregunta);
+
+write("                                _                 _                      \n", "\033[1;32m");
+write("   ___ ___    _____ ___ ___ ___| |_ ___ ___ _____|_|___ ___    ___ ___   \n", "\033[1;32m");
+write("  |___|___|  |     | .'| . |_ -|  _| . |  _|     | |   | . |  |___|___|  \n", "\033[1;32m");
+write("             |_|_|_|__,|  _|___|_| |___|_| |_|_|_|_|_|_|_  |             \n", "\033[1;32m");
+write("                       |_|                             |___|             \n", "\033[1;32m");
+newline();
+
+write("We have ".count($cities)." cities ready to go:", $colorPregunta);
+newline();
+listCities();
+write("Do you want to use one of the avobe? (yes/no): ");
+$data['__City'] = saveInput();
+
 // newline();
 // newline();
 // write("What city do you want to process?", $colorPregunta);
@@ -122,19 +145,6 @@ function addDataset($dataset)
 
 // Data is hardcoded for now, but uncommenting above will
 // gather all this information by interacting with the user
-
-$data['__City'] = 'Bogotá';
-$data['__Country'] = 'Colombia';
-$data['__BikestormingId'] = 'bgt';
-$data['__SWLng'] = -74.22981262207031;
-$data['__SWLat'] = 4.45937341380256;
-$data['__NELng'] = -73.98536682128906;
-$data['__NELat'] = 4.852890820110573;
-$data['__CenterLat'] = 4.6397504;
-$data['__CenterLng'] = -74.0619917;
-$data['__CenterZoom'] = 13;
-$data['__MinZoom'] = 11;
-$data['__MaxZoom'] = 17;
 
 // Ask user which dataset wants to process
 newline();
@@ -196,7 +206,7 @@ $output->Layer = [];
 
 foreach ($layersToProcess as $layer) {
 	$l = new StdClass();
-	$l->geometry = 'point';
+	$l->geometry = preg_match('|cycle|', $layer) ? 'linestring' : 'point';
 	$l->extent = $output->bounds;
 	// Must be the same as name, will be the mapbox id
 	$l->id = 'bk'.$data['__BikestormingId'].'_'.$layer;

@@ -1,0 +1,12 @@
+{
+  "name": "bikestorming/mapstorming",
+  "description": "MAPSTORMIN MADAFACA",
+  "require": {
+    "symfony/console": "dev-master"
+  },
+  "autoload": {
+    "psr-4": {
+      "Mapstorming\\": "src/"
+    }
+  }
+}

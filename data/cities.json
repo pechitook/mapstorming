@@ -1,0 +1,30 @@
+[
+  {
+    "name": "Buenos Aires",
+    "country": "Argentina",
+    "bikestormingId": "ba",
+    "SWLng": -58.982849121094,
+    "SWLat": -34.856636719052,
+    "NELng": -58.098449707031,
+    "NELat": -34.14590795201,
+    "centerLat": -34.6063608,
+    "centerLng": -58.4355217,
+    "centerZoom": 13,
+    "minZoom": 11,
+    "maxZoom": 17
+  },
+  {
+    "name": "Bogotá",
+    "country": "Colombia",
+    "bikestormingId": "bgt",
+    "SWLng": -74.22981262207,
+    "SWLat": 4.4593734138026,
+    "NELng": -73.985366821289,
+    "NELat": 4.8528908201106,
+    "centerLat": 4.6397504,
+    "centerLng": -74.0619917,
+    "centerZoom": 13,
+    "minZoom": 11,
+    "maxZoom": 17
+  }
+]

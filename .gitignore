@@ -32,3 +32,7 @@ build
 .tmp
 
 tilemill_project/datasets/*
+/vendor/
+.idea
+*.mbtiles
+*.geojson

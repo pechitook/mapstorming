@@ -1,6 +1,6 @@
 /**  ———————————————————————————————————————————— 1 CYCLESTREET —————————————————————— **/
 
-.cycleway {
+.cyclestreet {
   
   ::case {
     line-color:#33ffff;
@@ -41,41 +41,41 @@
   }
   
   [zoom>=13]
-	::case {
+  ::case {
     line-width: 5;
     line-opacity:0.2;
   }
-	::fill {
+  ::fill {
     line-width: 1;
     line-opacity:0.5;
   }
 
   [zoom>=14]
-	::case {
+  ::case {
     line-width: 7;
     line-opacity:0.2;
   }
-	::fill {
+  ::fill {
     line-width: 1;
     line-opacity:0.5;
   }
 
   [zoom>=15]
-	::case {
+  ::case {
     line-width: 9;
     line-opacity:0.2;
   }
-	::fill {
+  ::fill {
     line-width: 2;
     line-opacity:0.5;
   }
   
   [zoom>=16]
-	::case {
+  ::case {
     line-width: 11;
     line-opacity:0.2;
   }
-	::fill {
+  ::fill {
     line-width: 2;
     line-opacity:0.5;
   }
@@ -84,13 +84,13 @@
 
 /**  ———————————————————————————————————————————— cyclestreet —————————————————————— **/  
 
-  .cyclestreet {
+.cycleway {
   
   ::case {
     line-color:#33ff33;
     line-join: round;
   }
-	::fill {
+  ::fill {
     line-color:#33ff33;
     line-join: round;                         
   }
@@ -178,31 +178,31 @@
   [zoom>=10] {
     marker-width:1;
     marker-allow-overlap:true;
-	}
+  }
   
   [zoom>=11] {
     marker-width:2;
     marker-allow-overlap:true;
-	}
+  }
   
   [zoom>=12] {
     marker-width:3;
     marker-allow-overlap:true;
-	} 
+  } 
      
   [zoom>=13] {
     marker-width:4;
     marker-allow-overlap:true;
-	}
+  }
   
   [zoom>=14] {
     point-opacity: 0.8;
     marker-width:9;
     marker-allow-overlap:true;
     point-file: url(images/safeparking.svg);
-	point-allow-overlap:true;
+  point-allow-overlap:true;
     point-transform:"scale(0.09)";
-	}
+  }
 
   
   [zoom>=15] {
@@ -212,7 +212,7 @@
     point-file: url(images/safeparking.svg);
     point-allow-overlap:true;
     point-transform:"scale(0.12)";
-	}
+  }
   
   
   [zoom>=16] {
@@ -222,7 +222,7 @@
     point-file: url(images/safeparking.svg);
     point-allow-overlap:true;
     point-transform:"scale(0.2)";
-	}
+  }
    
 }
 
@@ -237,31 +237,31 @@
   [zoom>=10] {
     marker-width:2;
     marker-allow-overlap:true;
-	}
+  }
   
   [zoom>=11] {
     marker-width:3;
     marker-allow-overlap:true;
-	}
+  }
   
   [zoom>=12] {
     marker-width:4;
     marker-allow-overlap:true;
-	} 
+  } 
      
   [zoom>=13] {
     marker-width:5;
     marker-allow-overlap:true;
-	}
+  }
   
   [zoom>=14] {
     point-opacity: 1;
     marker-width:15;
     marker-allow-overlap:true;
     point-file: url(images/wifi.svg);
-	point-allow-overlap:true;
+  point-allow-overlap:true;
     point-transform:"scale(0.15)";
-	}
+  }
 
   
   [zoom>=15] {
@@ -271,7 +271,7 @@
     point-file: url(images/wifi.svg);
     point-allow-overlap:true;
     point-transform:"scale(0.25)";
-	}
+  }
   
   
   [zoom>=16] {
@@ -281,7 +281,7 @@
     point-file: url(images/wifi.svg);
     point-allow-overlap:true;
     point-transform:"scale(0.3)";
-	}
+  }
    
 }
 
@@ -296,31 +296,31 @@
   [zoom>=10] {
     marker-width:2;
     marker-allow-overlap:true;
-	}
+  }
   
   [zoom>=11] {
     marker-width:3;
     marker-allow-overlap:true;
-	}
+  }
   
   [zoom>=12] {
     marker-width:4;
     marker-allow-overlap:true;
-	} 
+  } 
      
   [zoom>=13] {
     marker-width:5;
     marker-allow-overlap:true;
-	}
+  }
   
   [zoom>=14] {
     point-opacity: 1;
     marker-width:15;
     marker-allow-overlap:true;
     point-file: url(images/reward3.svg);
-	point-allow-overlap:true;
+  point-allow-overlap:true;
     point-transform:"scale(0.15)";
-	}
+  }
 
   
   [zoom>=15] {
@@ -330,7 +330,7 @@
     point-file: url(images/reward3.svg);
     point-allow-overlap:true;
     point-transform:"scale(0.25)";
-	}
+  }
   
   
   [zoom>=16] {
@@ -340,7 +340,7 @@
     point-file: url(images/reward3.svg);
     point-allow-overlap:true;
     point-transform:"scale(0.3)";
-	}
+  }
    
 }
 
@@ -357,35 +357,35 @@
    [zoom>=10] {
     marker-width:2;
     marker-allow-overlap:true;
-	}
+  }
   
   [zoom>=11] {
     marker-width:3;
     marker-allow-overlap:true;
-	}
+  }
   
   [zoom>=12] {
     marker-width:4;
     marker-allow-overlap:true;
-	} 
+  } 
 
   [zoom>=13] {
     point-opacity: 0.8;
     marker-width:9;
     marker-allow-overlap:true;
     point-file: url(images/rack2.svg);
-	point-allow-overlap:true;
+  point-allow-overlap:true;
     point-transform:"scale(0.09)";
-	}
+  }
 
   [zoom>=14] {
     point-opacity: 0.8;
     marker-width:9;
     marker-allow-overlap:true;
     point-file: url(images/rack2.svg);
-	point-allow-overlap:true;
+  point-allow-overlap:true;
     point-transform:"scale(0.09)";
-	}
+  }
 
   [zoom>=15] {
     point-opacity: 0.9;
@@ -394,7 +394,7 @@
     point-file: url(images/rack2.svg);
     point-allow-overlap:true;
     point-transform:"scale(0.12)";
-	}
+  }
   
   [zoom>=16] {
     point-opacity: 1;
@@ -403,7 +403,7 @@
     point-file: url(images/rack2.svg);
     point-allow-overlap:true;
     point-transform:"scale(0.24)";
-	}
+  }
    
 }
 
@@ -467,12 +467,12 @@
   [zoom>=10] {
     marker-width:3;
     marker-allow-overlap:true;
-	}
+  }
 
   [zoom>=11] {
     marker-width:5;
     marker-allow-overlap:true;
-	}
+  }
 
   [zoom>=12] {
     point-opacity: 0.8;
@@ -481,7 +481,7 @@
     point-file: url(images/train_station.svg);
     point-allow-overlap:true;
     point-transform:"scale(0.15)";
-	}
+  }
 
   [zoom>=13] {
     point-opacity: 0.9;
@@ -490,7 +490,7 @@
     point-file: url(images/train_station.svg);
     point-allow-overlap:true;
     point-transform:"scale(0.20)";
-	}
+  }
 
   [zoom>=14] {
     point-opacity: 1;
@@ -499,7 +499,7 @@
     point-file: url(images/train_station.svg);
     point-allow-overlap:true;
     point-transform:"scale(0.3)";
-	}
+  }
 
   [zoom>=15] {
     point-opacity: 1;
@@ -508,7 +508,7 @@
     point-file: url(images/train_station.svg);
     point-allow-overlap:true;
     point-transform:"scale(0.4)";
-	}
+  }
   
   [zoom>=16] {
     point-opacity: 1;
@@ -517,7 +517,7 @@
     point-file: url(images/train_station.svg);
     point-allow-overlap:true;
     point-transform:"scale(0.5)";
-	}
+  }
   
 }
 
@@ -533,31 +533,31 @@
   [zoom>=10] {
     marker-width:2;
     marker-allow-overlap:true;
-	}
+  }
   
   [zoom>=11] {
     marker-width:3;
     marker-allow-overlap:true;
-	}
+  }
   
   [zoom>=12] {
     marker-width:4;
     marker-allow-overlap:true;
-	} 
+  } 
      
   [zoom>=13] {
     marker-width:5;
     marker-allow-overlap:true;
-	}
+  }
   
   [zoom>=14] {
     point-opacity: 0.8;
     marker-width:9;
     marker-allow-overlap:true;
     point-file: url(images/bikeshop.svg);
-	point-allow-overlap:true;
+  point-allow-overlap:true;
     point-transform:"scale(0.12)";
-	}
+  }
 
   
   [zoom>=15] {
@@ -567,7 +567,7 @@
     point-file: url(images/bikeshop.svg);
     point-allow-overlap:true;
     point-transform:"scale(0.15)";
-	}
+  }
   
   
   [zoom>=16] {
@@ -577,7 +577,7 @@
     point-file: url(images/bikeshop.svg);
     point-allow-overlap:true;
     point-transform:"scale(0.25)";
-	}
+  }
    
 }
 
@@ -593,31 +593,31 @@
   [zoom>=10] {
     marker-width:2;
     marker-allow-overlap:true;
-	}
+  }
   
   [zoom>=11] {
     marker-width:3;
     marker-allow-overlap:true;
-	}
+  }
   
   [zoom>=12] {
     marker-width:4;
     marker-allow-overlap:true;
-	} 
+  } 
      
   [zoom>=13] {
     marker-width:5;
     marker-allow-overlap:true;
-	}
+  }
   
   [zoom>=14] {
     point-opacity: 0.8;
     marker-width:9;
     marker-allow-overlap:true;
     point-file: url(images/airpump2.svg);
-	point-allow-overlap:true;
+  point-allow-overlap:true;
     point-transform:"scale(0.11)";
-	}
+  }
 
   
   [zoom>=15] {
@@ -627,7 +627,7 @@
     point-file: url(images/airpump2.svg);
     point-allow-overlap:true;
     point-transform:"scale(0.14)";
-	}
+  }
   
   
   [zoom>=16] {
@@ -637,7 +637,7 @@
     point-file: url(images/airpump2.svg);
     point-allow-overlap:true;
     point-transform:"scale(0.26)";
-	}
+  }
    
 }
 
@@ -653,31 +653,31 @@
   [zoom>=10] {
     marker-width:2;
     marker-allow-overlap:true;
-	}
+  }
   
   [zoom>=11] {
     marker-width:3;
     marker-allow-overlap:true;
-	}
+  }
   
   [zoom>=12] {
     marker-width:4;
     marker-allow-overlap:true;
-	} 
+  } 
      
   [zoom>=13] {
     marker-width:5;
     marker-allow-overlap:true;
-	}
+  }
   
   [zoom>=14] {
     point-opacity: 1;
     marker-width:15;
     marker-allow-overlap:true;
     point-file: url(images/publicbike.svg);
-	point-allow-overlap:true;
+  point-allow-overlap:true;
     point-transform:"scale(0.15)";
-	}
+  }
 
   
   [zoom>=15] {
@@ -687,7 +687,7 @@
     point-file: url(images/publicbike.svg);
     point-allow-overlap:true;
     point-transform:"scale(0.25)";
-	}
+  }
   
   
   [zoom>=16] {
@@ -697,7 +697,7 @@
     point-file: url(images/publicbike.svg);
     point-allow-overlap:true;
     point-transform:"scale(0.3)";
-	}
+  }
    
 }
 
@@ -798,12 +798,12 @@
   [zoom>=10] {
     marker-width:3;
     marker-allow-overlap:true;
-	}
+  }
 
   [zoom>=11] {
     marker-width:5;
     marker-allow-overlap:true;
-	}
+  }
 
   [zoom>=12] {
     point-opacity: 0.8;
@@ -812,7 +812,7 @@
     point-file: url(images/subway_station.svg);
     point-allow-overlap:true;
     point-transform:"scale(0.10)";
-	}
+  }
 
   [zoom>=13] {
     point-opacity: 0.9;
@@ -821,7 +821,7 @@
     point-file: url(images/subway_station.svg);
     point-allow-overlap:true;
     point-transform:"scale(0.15)";
-	}
+  }
 
   [zoom>=14] {
     point-opacity: 1;
@@ -830,7 +830,7 @@
     point-file: url(images/subway_station.svg);
     point-allow-overlap:true;
     point-transform:"scale(0.20)";
-	}
+  }
 
   [zoom>=15] {
     point-opacity: 1;
@@ -839,7 +839,7 @@
     point-file: url(images/subway_station.svg);
     point-allow-overlap:true;
     point-transform:"scale(0.35)";
-	}
+  }
   
   [zoom>=16] {
     point-opacity: 1;
@@ -848,7 +848,7 @@
     point-file: url(images/subway_station.svg);
     point-allow-overlap:true;
     point-transform:"scale(0.45)";
-	}
+  }
     
 }
 
@@ -923,7 +923,7 @@
     line-color:#ff4455;
     line-join: round;
   }
-	::fill {
+  ::fill {
     line-color:#ff4455;
     line-join: round;                         
   }
@@ -959,41 +959,41 @@
   }
   
   [zoom>=13]
-	::case {
+  ::case {
     line-width: 5;
     line-opacity:0.2;
   }
-	::fill {
+  ::fill {
     line-width: 1;
     line-opacity:0.5;
   }
 
   [zoom>=14]
-	::case {
+  ::case {
     line-width: 7;
     line-opacity:0.2;
   }
-	::fill {
+  ::fill {
     line-width: 1;
     line-opacity:0.5;
   }
 
   [zoom>=15]
-	::case {
+  ::case {
     line-width: 9;
     line-opacity:0.2;
   }
-	::fill {
+  ::fill {
     line-width: 2;
     line-opacity:0.5;
   }
   
   [zoom>=16]
-	::case {
+  ::case {
     line-width: 11;
     line-opacity:0.2;
   }
-	::fill {
+  ::fill {
     line-width: 2;
     line-opacity:0.5;
   }
