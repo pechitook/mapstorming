@@ -1,4 +1,4 @@
-grunt-tilemill
+Mapstorming
 ==============
 
 Grunt task to export and/or upload mbtiles to mapbox.
@@ -8,7 +8,13 @@ Grunt task to export and/or upload mbtiles to mapbox.
 Execute CLI and follow instructions:
 
 ~~~
-$ php project_template.php
+$ php mapstorming.php process
+~~~
+
+###Add a new City
+
+~~~
+$ php mapstorming.php add-city
 ~~~
 
 ###Export MBTiles to tilemill_project/mbtiles
