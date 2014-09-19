@@ -6,15 +6,17 @@ module.exports = function (grunt) {
    * IMPORTANT: projectPath must be the same of tileMill setting (Application settings -> Documents)
    */
   var config = {
+    // EDIT ONLY THIS -->
     tileMillPath: '/Applications/TileMill.app/Contents/Resources/',
-    tileMillDocumentPath: '/Users/pablochiappetti/Documents/MapBox/project/',
+    tileMillDocumentPath: '/Users/user/Documents/MapBox/project/',
+    syncAccount: 'bbx',
+    // <-- EDIT ONLY THIS
     outputMBTiles: __dirname + '/tilemill_project/mbtiles/',
     datasetPath: __dirname + '/tilemill_project/datasets/',
     projectTemplate: __dirname + '/tilemill_project/template/',
     layersTogethers: false,
     prependName: '',
     projectName: 'bk_export_bot',
-    syncAccount: 'bbx',
     upload: false
   };
 
