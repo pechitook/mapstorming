@@ -53,7 +53,7 @@ class Project {
         $output->description = "";
         $output->attribution = "";
 
-        file_put_contents('tilemill_project/template/project.mml', json_encode($output));
+        file_put_contents(__DIR__.'/../tilemill_project/template/project.mml', json_encode($output));
 
     }
 } 

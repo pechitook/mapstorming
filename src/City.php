@@ -6,7 +6,7 @@ class City {
     protected $all;
 
     public function __construct(){
-        $this->all = json_decode(file_get_contents(basename(__DIR__).'/../data/cities.json'));
+        $this->all = json_decode(file_get_contents(__DIR__.'/../data/cities.json'));
     }
 
     public function add($city){
@@ -15,7 +15,7 @@ class City {
     }
 
     public function save(){
-        file_put_contents(basename(__DIR__).'/../data/cities.json', json_encode($this->all));
+        file_put_contents(__DIR__.'/../data/cities.json', json_encode($this->all));
     }
 
     public function getAll(){

@@ -18,6 +18,7 @@ use Symfony\Component\Console\Question\ConfirmationQuestion;
 /**
  * @property Project project
  * @property Config config
+ * @property mixed datasetsDirectory
  */
 class ProcessDatasets extends MapstormingCommand {
 
@@ -28,6 +29,7 @@ class ProcessDatasets extends MapstormingCommand {
     	$this->config = new Config();
         $this->project = new Project();
         $this->city = new City();
+        $this->datasetsDirectory = __DIR__.'/../../tilemill_project/datasets/';
 
         $this->setName('process')
              ->setDescription('Process GeoJSON datasets with Tilemill')
@@ -57,7 +59,7 @@ class ProcessDatasets extends MapstormingCommand {
             $city = $this->selectCity($input, $output, $helper);
         }
 
-        $datasetsDir = 'tilemill_project/datasets/'.$city->bikestormingId.'/';
+        $datasetsDir = $this->datasetsDirectory.$city->bikestormingId.'/';
 
         if ($geojsons = $this->getGeojsonsInDirectory($datasetsDir)) {
             $layers = $this->getLayersFromFileName($geojsons);
@@ -78,10 +80,10 @@ class ProcessDatasets extends MapstormingCommand {
         $upload = $helper->ask($input, $output, $question);
 
         if ($upload){
-            return system('grunt uploadMbtiles');
+            return system('grunt --base '.$this->config->fullpath.' --gruntfile '.$this->config->fullpath.'/GruntFile.js uploadMbtiles');
         }
 
-        return system('grunt exportMbtiles');
+        return system('grunt --base '.$this->config->fullpath.' --gruntfile '.$this->config->fullpath.'/GruntFile.js exportMbtiles');
     }
 
     /**
@@ -173,14 +175,14 @@ class ProcessDatasets extends MapstormingCommand {
 
             // show list
             if ($res == 'list') {
-                foreach ($this->config->layers() as $layer) {
+                foreach ($this->config->layers as $layer) {
                     $output->writeln("- $layer");
                 }
                 continue;
             }
 
             // if it is not a layer, show help
-            if (!in_array($res, $this->config->layers())) {
+            if (!in_array($res, $this->config->layers)) {
                 $output->writeln('<error>'.$res.' is not a valid option.</error>');
                 $output->writeln('Type <info>list</info> to see which datasets are available.');
                 $output->writeln('Alternatively, type <info>done</info> when you are ready to move on.');
@@ -218,7 +220,7 @@ class ProcessDatasets extends MapstormingCommand {
 
     private function askToProcessAllLayers($layers, Input $input,Output $output, Helper $helper, $directory)
     {
-        $output->writeln("\n<say>These are all the datasets ready to be processed on <high>".$directory."</high>:</say>");
+        $output->writeln("\n<say>These are all the datasets ready to be processed:</say>");
         foreach($layers as $layer){
             $output->writeln("- $layer");
         }
