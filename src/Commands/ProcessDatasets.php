@@ -19,7 +19,7 @@ use Symfony\Component\Console\Question\ConfirmationQuestion;
  * @property Project project
  * @property Config config
  */
-class ProcessDatasets extends Command {
+class ProcessDatasets extends MapstormingCommand {
 
     protected $data = [];
 
@@ -53,8 +53,8 @@ class ProcessDatasets extends Command {
         if ($this->useLoadedCity($input, $output, $helper)) {
             $city = $this->selectCity($input, $output, $helper);
 		}else{
-            $output->writeln("<say>Please use <high>add-city</high> command to add a new city, then try again.</say>");
-            return false;
+            $this->getApplication()->find('add-city')->run($input, $output);
+            $city = $this->selectCity($input, $output, $helper);
         }
 
         $datasetsDir = 'tilemill_project/datasets/'.$city->bikestormingId.'/';
@@ -86,30 +86,22 @@ class ProcessDatasets extends Command {
 
     /**
      * @param OutputInterface $output
-     * @return \Symfony\Component\Console\Output\OutputInterface
-     */
-    protected function setOutputFormat(OutputInterface $output)
-    {
-        $style = new OutputFormatterStyle('cyan', 'black', array('bold'));
-        $output->getFormatter()->setStyle('high', $style);
-        $style = new OutputFormatterStyle('blue', 'black', array('bold'));
-        $output->getFormatter()->setStyle('say', $style);
-        $style = new OutputFormatterStyle('green', 'black', array('bold'));
-        $output->getFormatter()->setStyle('ask', $style);
-        return $output;
-    }
-
-    /**
-     * @param OutputInterface $output
      */
     protected function displayWelcomeMessage(OutputInterface $output)
     {
-        $output->writeln("<high>                                _                 _                      </high>");
-        $output->writeln("<high>   ___ ___    _____ ___ ___ ___| |_ ___ ___ _____|_|___ ___    ___ ___   </high>");
-        $output->writeln("<high>  |___|___|  |     | .'| . |_ -|  _| . |  _|     | |   | . |  |___|___|  </high>");
-        $output->writeln("<high>             |_|_|_|__,|  _|___|_| |___|_| |_|_|_|_|_|_|_  |             </high>");
-        $output->writeln("<high>                       |_|                             |___|             </high>");
-        $output->writeln("");
+        $output->writeln("\n<high>        <star>*</star>     <star>*</star>    <star>*</star>     /\__/\  <star>*</star>    <bk>---</bk>    <star>*</star>     </high>");
+        $output->writeln("<high>           <star>*</star>            /      \    <bk>/     \ </bk>         </high>");
+        $output->writeln("<high>                <star>*</star>   <star>*</star>  |  -  -  |  <bk>|   B   |</bk>   <star>*</star>     </high>");
+        $output->writeln("<high>         <star>*</star>   __________| \     /|  <bk>|   K   |</bk>         </high>");
+        $output->writeln("<high>           /              \ T / |   <bk>\     /</bk>         </high>");
+        $output->writeln("<high>         /                      |  <star>*</star>  <bk>---</bk>     </high>");
+        $output->writeln("<high>        |  ||     |    |       /             <star>*</star>     </high>");
+        $output->writeln("<high>        |  ||    /______\     / | <star>*</star>     <star>*</star>     </high>");
+        $output->writeln("<high>        |  | \  |  /     \   /  |     </high>");
+        $output->writeln("<high>         \/   | |\ \      | | \ \     </high>");
+        $output->writeln("<high>              | | \ \     | |  \ \     </high>");
+        $output->writeln("<high>              | |  \ \    | |   \ \     </high>");
+        $output->writeln("<high>              '''   '''   '''    '''        </high>");
         $output->writeln("<say>\nWelcome to <high>Mapstorming!</high> Let's open a city together, shall we?</say>");
     }
 

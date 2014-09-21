@@ -4,12 +4,18 @@
 require 'vendor/autoload.php';
 
 use Mapstorming\Commands\AddNewCity;
+use Mapstorming\Commands\DeleteCity;
 use Mapstorming\Commands\ProcessDatasets;
 use Symfony\Component\Console\Application;
 
 $process = new ProcessDatasets();
 $application = new Application();
-$application->add($process);
+$application->setName('Mapstorming');
 $application->setDefaultCommand($process->getName());
+$application->setVersion(0.1);
+
+$application->add($process);
 $application->add(new AddNewCity());
+$application->add(new DeleteCity());
+
 $application->run();
