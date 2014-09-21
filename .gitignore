@@ -38,6 +38,5 @@ tilemill_project/datasets/*
 *.geojson
 *.export
 *.export-failed
-Gruntfile.js
 
 tilemill_project/template/project.mml
