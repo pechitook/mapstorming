@@ -48,7 +48,6 @@ class AddNewCity extends MapstormingCommand {
         // City Name
         $question = new ValidableQuestion("<ask><high>Name</high> of the city?: </ask>", ["required"]);
         $city->name = $helper->ask($input, $output, $question);
-        var_dump($city->name);
 
         // Country
         $question = new ValidableQuestion("<ask>Which <high>Country</high> is it in?: </ask>", ["required"]);
