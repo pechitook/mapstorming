@@ -3,7 +3,7 @@
 class Config {
 
     public function __construct(){
-        $this->fullpath = '~/Documents/Bikestorming/mapstorming/';
+        $this->fullpath = '/Users/pablochiappetti/Documents/Bikestorming/mapstorming/';
         $this->layers = [
             'bike_shop',
             'safe_parking',
@@ -25,5 +25,18 @@ class Config {
             'rewards',
             'public_bike',
         ];
+        $this->scrapSources = [
+            'free_wifi' => [
+                'foursquare'
+            ],
+            'bike_shop' => [
+                'google'
+            ],
+        ];
+    }
+
+    public function scrapSourcesFor($dataset)
+    {
+        return $this->scrapSources[$dataset];
     }
 }

@@ -22,20 +22,48 @@ class City {
         return $this->all;
     }
 
-    public function getAllNames(){
+    public function getAllNames($lowercase = false){
         $arr = [];
         foreach ($this->all as $city) {
-            $arr[] = $city->name;
+            $arr[] = $lowercase ? strtolower($city->name) : $city->name;
         }
         return $arr;
     }
 
-    public function getByName($cityName)
+    public function getByName($cityName, $lowercase = false)
     {
         foreach ($this->all as $city){
-            if ($city->name == $cityName){
+            $search = $lowercase ? ucwords($cityName) : $cityName;
+            if ($city->name == $search){
                 return $city;
             }
         }
+    }
+    public function getById($cityId)
+    {
+        foreach ($this->all as $city){
+            if ($city->bikestormingId == $cityId){
+                return $city;
+            }
+        }
+    }
+
+    public function deleteByBikestormingID($id)
+    {
+        foreach ($this->all as $key => $city){
+            if ($city->bikestormingId == $id){
+                unset($this->all[$key]);
+            }
+        }
+        $this->save();
+    }
+
+    public function getAllBikestormingIDs()
+    {
+        $arr = [];
+        foreach ($this->all as $city) {
+            $arr[] = $city->bikestormingId;
+        }
+        return $arr;
     }
 }

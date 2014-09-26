@@ -5,11 +5,13 @@ use Mapstorming\Config;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
+use Symfony\Component\Console\Question\Question;
 
 
 /**
  * @property Project project
  * @property Config config
+ * @property City city
  */
 class DeleteCity extends MapstormingCommand {
     protected $data = [];
@@ -20,13 +22,7 @@ class DeleteCity extends MapstormingCommand {
         $this->city = new City();
 
         $this->setName('delete-city')
-            ->setDescription('Delete a City')
-//             ->addArgument(
-//                 'directory',
-//                 InputArgument::OPTIONAL,
-//                 'Full path to the geojsons you want to process'
-//             )
-        ;
+            ->setDescription('Delete a City');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -38,16 +34,21 @@ class DeleteCity extends MapstormingCommand {
 
         $question = new ChoiceQuestion(
             "\n<say>Please select which city you want to <high>delete</high></say>",
-            $this->city->getAllNames()
+            $this->city->getAllBikestormingIDs()
         );
 
         $question->setErrorMessage('Please use the number in [brackets] to refer to the city.');
 
-        $cityName = $helper->ask($input, $output, $question);
+        $bkid = $helper->ask($input, $output, $question);
 
-        $output->writeln("\n<say>*** <high>$cityName</high> it is! ***</say>");
+        $question = new Question("\n<say>Password, please?: </say>");
+        $question->setHidden(true);
 
-        return $this->city->getByName($cityName);
+        $password = $helper->ask($input, $output, $question);
+
+        if (md5($password) == 'f22ec0566c58b521e7f512d0bb55e67e') return $this->city->deleteByBikestormingID($bkid);
+
+        $output->writeln("<error>Wrong password :/</error>");
 
     }
 }

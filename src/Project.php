@@ -30,6 +30,7 @@ class Project {
             $l = new \StdClass();
             $l->geometry = preg_match('|cycle|', $layer) ? 'linestring' : 'point';
             $l->extent = $output->bounds;
+            $l->status = 'Off';
             // Must be the same as name, will be the mapbox id
             $l->id = 'bk'.$city->bikestormingId.'_'.$layer;
             $l->class = $layer;
@@ -53,7 +54,15 @@ class Project {
         $output->description = "";
         $output->attribution = "";
 
-        file_put_contents(__DIR__.'/../tilemill_project/template/project.mml', json_encode($output));
+        $this->save($output);
 
     }
-} 
+
+    public function getJSON(){
+        return json_decode(file_get_contents(__DIR__.'/../tilemill_project/template/project.mml'));
+    }
+
+    public function save($project){
+        file_put_contents(__DIR__.'/../tilemill_project/template/project.mml', json_encode($project));
+    }
+}

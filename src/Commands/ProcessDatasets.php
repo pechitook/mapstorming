@@ -6,6 +6,7 @@ use Mapstorming\Project;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Helper\Helper;
+use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\Input;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\Output;
@@ -33,16 +34,13 @@ class ProcessDatasets extends MapstormingCommand {
 
         $this->setName('process')
              ->setDescription('Process GeoJSON datasets with Tilemill')
-//             ->addArgument(
-//                 'directory',
-//                 InputArgument::OPTIONAL,
-//                 'Full path to the geojsons you want to process'
-//             )
-        ;
+            ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        // Style the output
+        $output = $this->setOutputFormat($output);
         // Style the output
         $output = $this->setOutputFormat($output);
         // Helper to ask questions through Console
@@ -80,10 +78,16 @@ class ProcessDatasets extends MapstormingCommand {
         $upload = $helper->ask($input, $output, $question);
 
         if ($upload){
-            return system('grunt --base '.$this->config->fullpath.' --gruntfile '.$this->config->fullpath.'/GruntFile.js uploadMbtiles');
+            $command = $this->getApplication()->find('export');
+            $arguments = array(
+                'command' => 'export',
+                '--upload'  => true,
+            );
+            $input = new ArrayInput($arguments);
+            return $command->run($input, $output);
         }
 
-        return system('grunt --base '.$this->config->fullpath.' --gruntfile '.$this->config->fullpath.'/GruntFile.js exportMbtiles');
+        return $this->getApplication()->find('export')->run($input, $output);
     }
 
     /**
@@ -140,9 +144,12 @@ class ProcessDatasets extends MapstormingCommand {
      */
     protected function selectCity(InputInterface $input, OutputInterface $output, $helper)
     {
+        // get a new instance since it may have changed
+        $city = new City();
+
         $question = new ChoiceQuestion(
             "\n<say>Please select which city you want to work with</say>",
-            $this->city->getAllNames()
+            $city->getAllNames()
         );
 
         $question->setErrorMessage('Please use the number in [brackets] to refer to the city.');
@@ -228,8 +235,4 @@ class ProcessDatasets extends MapstormingCommand {
         return $helper->ask($input, $output, $question);
     }
 
-    private function addNewCity(Output $output)
-    {
-        $output->writeln("<say>Ok, let's add a new city then!</say>");
-    }
 }

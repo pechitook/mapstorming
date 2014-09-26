@@ -15,7 +15,7 @@ use Symfony\Component\Console\Question\ConfirmationQuestion;
  * @property Project project
  * @property Config config
  */
-class AddNewCity extends MapstormingCommand {
+class AddCity extends MapstormingCommand {
 
     protected $data = [];
 
@@ -101,7 +101,6 @@ class AddNewCity extends MapstormingCommand {
 
     private function addCityBoundaries($city, $boundaries)
     {
-        var_dump(json_decode($boundaries));
         $points = json_decode($boundaries)[0];
 
         $city->SWLng = (double)$points[0][0];

@@ -1,12 +1,17 @@
 {
-  "name": "bikestorming/mapstorming",
-  "description": "MAPSTORMIN MADAFACA",
-  "require": {
-    "symfony/console": "dev-master"
-  },
-  "autoload": {
-    "psr-4": {
-      "Mapstorming\\": "src/"
-    }
-  }
+    "name": "bikestorming/mapstorming",
+    "description": "MAPSTORMIN MADAFACA",
+    "require": {
+        "symfony/console": "dev-master",
+        "guzzlehttp/guzzle": "~4.0",
+        "guzzlehttp/cache-subscriber": "0.1.*@dev"
+    },
+    "autoload": {
+        "psr-4": {
+            "Mapstorming\\": "src/"
+        }
+    },
+    "bin": [
+        "mapstorming"
+    ]
 }

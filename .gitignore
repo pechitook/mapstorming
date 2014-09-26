@@ -25,12 +25,6 @@ nbactions.xml
 *.sublime-project
 *.sublime-workspace
 
-# Build related files.
-node_modules
-bower_components
-build
-.tmp
-
 tilemill_project/datasets/*
 /vendor/
 .idea
@@ -38,5 +32,4 @@ tilemill_project/datasets/*
 *.geojson
 *.export
 *.export-failed
-
-tilemill_project/template/project.mml
+*.mml
