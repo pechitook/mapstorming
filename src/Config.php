@@ -3,7 +3,7 @@
 class Config {
 
     public function __construct(){
-        $this->fullpath = '/Users/pablochiappetti/Documents/Bikestorming/mapstorming/';
+        $this->fullpath = getenv('FULLPATH');
         $this->layers = [
             'bike_shop',
             'safe_parking',

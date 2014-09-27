@@ -32,7 +32,7 @@ class ExportMbtiles extends MapstormingCommand {
         $this->city = new City();
         $this->project = new Project();
         $this->configTilemill = [
-            'tileMillDocumentPath' => '/Users/pablochiappetti/Documents/MapBox/project/',
+            'tileMillDocumentPath' => getenv('TILEMILL_PATH'),
             'syncAccount'          => 'bkx',
             'tileMillPath'         => '/Applications/TileMill.app/Contents/Resources/',
             'outputMBTiles'        => $this->config->fullpath . 'tilemill_project/mbtiles',
