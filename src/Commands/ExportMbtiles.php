@@ -28,6 +28,7 @@ class ExportMbtiles extends MapstormingCommand {
     protected function configure()
     {
         $this->config = new Config();
+        $this->accessToken = getenv('TILEMILL_ACCESS_TOKEN');
         $this->city = new City();
         $this->project = new Project();
         $this->configTilemill = [
@@ -119,7 +120,7 @@ class ExportMbtiles extends MapstormingCommand {
         $commands = [
             "cd " . $config['tileMillPath']
         ];
-        $commands[] = './index.js export ' . $config['projectName'] . ' ' . $config['outputMBTiles'] . '/' . $layer->name . '.mbtiles --format=mbtiles';
+        $commands[] = './index.js export --verbose=off ' . $config['projectName'] . ' ' . $config['outputMBTiles'] . '/' . $layer->name . '.mbtiles --format=mbtiles';
 
         system(implode('&&', $commands));
     }
@@ -129,7 +130,7 @@ class ExportMbtiles extends MapstormingCommand {
         $config = $this->configTilemill;
         $commands = [
             "cd " . $config['tileMillPath'],
-            './index.js export ' . $layer->name . ' ' . $config['outputMBTiles'] . '/' . $layer->name . '.mbtiles --format=upload --syncAccount=' . $config["syncAccount"]
+            './index.js export --verbose=off ' . $layer->name . ' ' . $config['outputMBTiles'] . '/' . $layer->name . '.mbtiles --format=upload --syncAccessToken="'.$this->accessToken.'" --syncAccount=' . $config["syncAccount"]
         ];
 
         system(implode('&&', $commands));
