@@ -120,7 +120,8 @@ class AddCity extends MapstormingCommand {
         $parsed = explode('/', parse_url($url)["fragment"]);
 
         $city->mapConfig = new \StdClass();
-        $city->mapConfig->centerZoom = (int)str_replace('map=', '', $parsed[0]);
+        $centerZoom = (int)str_replace('map=', '', $parsed[0]);
+        $city->mapConfig->centerZoom = ($centerZoom > 11) ? $centerZoom : 11;
         $city->mapConfig->centerLat = (double) $parsed[1];
         $city->mapConfig->centerLng = (double) $parsed[2];
         $city->mapConfig->minZoom = 11;
