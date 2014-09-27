@@ -70,7 +70,7 @@ class ProcessDatasets extends MapstormingCommand {
                 $layers = $this->addDatasets($input, $output, $helper);
             }
         } else {
-            $output->writeln("<error>There are no geojson files to process in $datasetsDir - Please add them and try again</error>");
+            $output->writeln("<error>There are no geojson files to process in 'tilemill_project/datasets/{$city->bikestormingId}' \nPlease add them and try again</error>");
 
             return false;
         }
