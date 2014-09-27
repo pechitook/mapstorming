@@ -25,7 +25,6 @@ nbactions.xml
 *.sublime-project
 *.sublime-workspace
 
-tilemill_project/datasets/*
 /vendor/
 .idea
 *.mbtiles
