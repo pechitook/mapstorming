@@ -1,6 +1,7 @@
 #!/usr/bin/env php
 <?php
 
+@include('.env.php');
 error_reporting(E_STRICT);
 require 'vendor/autoload.php';
 

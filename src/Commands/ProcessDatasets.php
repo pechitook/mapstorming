@@ -20,10 +20,12 @@ use Symfony\Component\Console\Question\ConfirmationQuestion;
  * @property Project project
  * @property Config config
  * @property mixed datasetsDirectory
+ * @property City city
  */
 class ProcessDatasets extends MapstormingCommand {
 
     protected $data = [];
+    protected $allCities;
 
 	protected function configure()
     {
@@ -116,11 +118,12 @@ class ProcessDatasets extends MapstormingCommand {
      */
     protected function displayLoadedCities(OutputInterface $output)
     {
-        $cities = $this->city->getAll();
+        $output->writeln("\n<say>Loading cities...</say>");
+        // Actually call the remote DB to load the cities
+        $this->allCities = $this->city->getAll();
+        $output->writeln("\n<say>We have " . count($this->allCities) . " cities in our database:</say>");
 
-        $output->writeln("\n<say>We have " . count($cities) . " cities in our database:</say>");
-
-        foreach ($cities as $city) {
+        foreach ($this->allCities as $city) {
             $output->writeln("- " . $city->name);
         }
     }
@@ -144,12 +147,9 @@ class ProcessDatasets extends MapstormingCommand {
      */
     protected function selectCity(InputInterface $input, OutputInterface $output, $helper)
     {
-        // get a new instance since it may have changed
-        $city = new City();
-
         $question = new ChoiceQuestion(
             "\n<say>Please select which city you want to work with</say>",
-            $city->getAllNames()
+            $this->city->getNames($this->allCities)
         );
 
         $question->setErrorMessage('Please use the number in [brackets] to refer to the city.');

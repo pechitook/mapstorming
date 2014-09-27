@@ -33,3 +33,4 @@ tilemill_project/datasets/*
 *.export
 *.export-failed
 *.mml
+.env.php

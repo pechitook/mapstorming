@@ -10,6 +10,7 @@ namespace Mapstorming\Commands;
 
 use Mapstorming\City;
 use Mapstorming\Config;
+use Mapstorming\DB;
 use Mapstorming\Scrappers\ScrapperFactory;
 use Mapstorming\ValidableQuestion;
 use Symfony\Component\Console\Input\InputArgument;
@@ -24,11 +25,14 @@ use Symfony\Component\Console\Question\ChoiceQuestion;
  * @property Config config
  */
 class Scrap extends MapstormingCommand {
+    protected $allCities;
 
     public function configure()
     {
-        $this->city = new City();
         $this->config = new Config();
+        $this->city = new City();
+        $this->allCities = $this->city->getAll();
+
         $this->setName('get')
             ->setDescription("Let's go get some datasets!")
             ->addArgument('dataset', InputArgument::OPTIONAL, 'Which dataset do we want?')
@@ -53,7 +57,7 @@ class Scrap extends MapstormingCommand {
 
             // Get the City ID
             $question = new ValidableQuestion("<ask>Which city do you want to get datasets from?: </ask>", ['required']);
-            $question->setAutocompleterValues($this->city->getAllNames(true));
+            $question->setAutocompleterValues($this->city->getNames($this->allCities, true));
             $cityName = $helper->ask($input, $output, $question);
             $cityId = $this->city->getByName($cityName, true)->bikestormingId;
 
@@ -74,6 +78,9 @@ class Scrap extends MapstormingCommand {
 
         $countItems = count(json_decode($data)->features);
         $savedFile = $this->saveDataset($dataset, $this->city->getById($cityId), $data);
+
+        // Add layer to city's document on DB
+        $this->city->addLayer($dataset, $this->city->getById($cityId, $this->allCities));
 
         $output->writeln("<ask>$countItems items saved to $savedFile");
     }

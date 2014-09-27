@@ -51,7 +51,8 @@ class AddCity extends MapstormingCommand {
 
         // Country
         $question = new ValidableQuestion("<ask>Which <high>Country</high> is it in?: </ask>", ["required"]);
-        $city->country = $helper->ask($input, $output, $question);
+        $city->country = new \StdClass();
+        $city->country->name = $helper->ask($input, $output, $question);
 
         // Bikestorming ID
         $question = new ValidableQuestion("<ask>Bikestorming ID? (ba, bgt, crml, etc...): </ask>", ["required"]);
@@ -72,41 +73,43 @@ class AddCity extends MapstormingCommand {
         // Center
         $output->writeln("\n***");
         $output->writeln("<say>What about the center of the city?</say>");
-        $output->writeln("<ask>Please go to <high>http://geojson.io/#map=12/{$city->SWLat}/{$city->SWLng}</high> and center the city on the map. \n\nWhen you're done, <high>copy the url</high> and paste it here <high>↓</high></ask>");
+        $output->writeln("<ask>Please go to <high>http://geojson.io/#map=12/{$city->bounds->SWLat}/{$city->bounds->SWLng}</high> and center the city on the map. \n\nWhen you're done, <high>copy the url</high> and paste it here <high>↓</high></ask>");
 
         $centerUrl = $helper->ask($input, $output, new Question("<ask>URL: </ask>"));
         $city = $this->setCenterFromUrl($city, $centerUrl);
 
-        $city->minZoom = 11;
-        $city->maxZoom = 17;
 
         // Display information, wait for confirmation
         $output->writeln("\n<say>Please review <high>{$city->name}'s</high> information:</say>");
-        foreach(get_object_vars($city) as $prop => $value){
-            $output->writeln("<ask>$prop:</ask> $value");
-        }
+        $output->writeln("<ask>Name:</ask> {$city->name}");
+        $output->writeln("<ask>Country:</ask> {$city->country->name}");
+        $output->writeln("<ask>Bikestorming ID:</ask> {$city->bikestormingId}");
 
         $confirm = $helper->ask($input, $output, new ConfirmationQuestion("\n<ask>Is this correct? (yes/no): </ask>", true));
 
         // Add the city
         if ($confirm){
-            $this->createDatasetsDirectory($city->bikestormingId);
-            $this->city->add($city);
+            $output->writeln("\n<say>Saving to BK's Database...</say>");
+            if (!$this->city->add($city)){
+                $output->writeln("<error>There was an error trying to save to the DB. Are you online?</error>");
+                die();
+            }
 
-            $output->writeln("\n<high>Whooho, {$city->name} is now part of Bikestorming!</high>");
+            $this->createDatasetsDirectory($city->bikestormingId);
+            $output->writeln("<high>Whooho, {$city->name} is now part of Bikestorming!</high>");
         }else{
-            $output->writeln("\n<say>We need to start over :(</say>\n");
+            $output->writeln("\n<error>We need to start over then :(</error>");
         }
     }
 
     private function addCityBoundaries($city, $boundaries)
     {
         $points = json_decode($boundaries)[0];
-
-        $city->SWLng = (double)$points[0][0];
-        $city->SWLat = (double)$points[0][1];
-        $city->NELng = (double)$points[2][0];
-        $city->NELat = (double)$points[2][1];
+        $city->bounds = new \StdClass();
+        $city->bounds->SWLng = (double)$points[0][0];
+        $city->bounds->SWLat = (double)$points[0][1];
+        $city->bounds->NELng = (double)$points[2][0];
+        $city->bounds->NELat = (double)$points[2][1];
 
         return $city;
 
@@ -115,9 +118,13 @@ class AddCity extends MapstormingCommand {
     private function setCenterFromUrl($city, $url)
     {
         $parsed = explode('/', parse_url($url)["fragment"]);
-        $city->centerZoom = (int)str_replace('map=', '', $parsed[0]);
-        $city->centerLat = (double) $parsed[1];
-        $city->centerLng = (double) $parsed[2];
+
+        $city->mapConfig = new \StdClass();
+        $city->mapConfig->centerZoom = (int)str_replace('map=', '', $parsed[0]);
+        $city->mapConfig->centerLat = (double) $parsed[1];
+        $city->mapConfig->centerLng = (double) $parsed[2];
+        $city->minZoom = 11;
+        $city->maxZoom = 17;
 
         return $city;
     }

@@ -1,6 +1,9 @@
 <?php namespace Mapstorming;
 
 
+use Model\ArticleRepository;
+use MongoClient;
+
 class City {
 
     protected $all;
@@ -10,24 +13,14 @@ class City {
     }
 
     public function add($city){
-        array_push($this->all, $city);
-        $this->save();
-    }
-
-    public function save(){
-        file_put_contents(__DIR__.'/../data/cities.json', json_encode($this->all));
+        $db = new DB();
+        if ($db->insert('cities', json_encode($city))) return true;
+        return false;
     }
 
     public function getAll(){
-        return $this->all;
-    }
-
-    public function getAllNames($lowercase = false){
-        $arr = [];
-        foreach ($this->all as $city) {
-            $arr[] = $lowercase ? strtolower($city->name) : $city->name;
-        }
-        return $arr;
+        $db = new DB();
+        return $db->getAll('cities');
     }
 
     public function getByName($cityName, $lowercase = false)
@@ -39,9 +32,12 @@ class City {
             }
         }
     }
-    public function getById($cityId)
+    public function getById($cityId, $cities = null)
     {
-        foreach ($this->all as $city){
+        if (!$cities){
+            $cities = $this->getAll();
+        }
+        foreach ($cities as $city){
             if ($city->bikestormingId == $cityId){
                 return $city;
             }
@@ -65,5 +61,22 @@ class City {
             $arr[] = $city->bikestormingId;
         }
         return $arr;
+    }
+
+    public function getNames($allCities, $lowercase = false)
+    {
+        $arr = [];
+        foreach ($allCities as $city) {
+            $arr[] = $lowercase ? strtolower($city->name) : $city->name;
+        }
+        return $arr;
+    }
+
+    public function addLayer($dataset, $city)
+    {
+        $db = new DB();
+        $data = new \StdClass();
+        $data->name = $dataset;
+        $db->addItem(json_encode($data), ['bikestormingId', $city->bikestormingId], 'cities', 'layers');
     }
 }
