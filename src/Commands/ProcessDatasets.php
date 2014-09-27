@@ -49,7 +49,7 @@ class ProcessDatasets extends MapstormingCommand {
 
         $this->displayWelcomeMessage($output);
         $this->displayLoadedCities($output);
-        
+
         // Check if a datasets folder exists for each city. If not, create it
         $this->checkCitiesFolderExists($this->allCities);
 
@@ -247,7 +247,6 @@ class ProcessDatasets extends MapstormingCommand {
     private function checkCitiesFolderExists($allCities)
     {
         $files = array_diff(scandir($this->datasetsDirectory), ['..', '.', '.DS_Store']);
-        var_dump($files);
         foreach ($allCities as $city) {
             if (!in_array($city->bikestormingId, $files)) {
                 mkdir($this->datasetsDirectory . $city->bikestormingId);
