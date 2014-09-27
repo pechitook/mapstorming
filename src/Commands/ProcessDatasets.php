@@ -27,16 +27,15 @@ class ProcessDatasets extends MapstormingCommand {
     protected $data = [];
     protected $allCities;
 
-	protected function configure()
+    protected function configure()
     {
         $this->config = new Config();
         $this->project = new Project();
         $this->city = new City();
-        $this->datasetsDirectory = __DIR__.'/../../tilemill_project/datasets/';
+        $this->datasetsDirectory = __DIR__ . '/../../tilemill_project/datasets/';
 
         $this->setName('process')
-             ->setDescription('Process GeoJSON datasets with Tilemill')
-            ;
+            ->setDescription('Process GeoJSON datasets with Tilemill');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -50,24 +49,29 @@ class ProcessDatasets extends MapstormingCommand {
 
         $this->displayWelcomeMessage($output);
         $this->displayLoadedCities($output);
+        
+        // Check if a datasets folder exists for each city. If not, create it
+        $this->checkCitiesFolderExists($this->allCities);
 
         // Does the user want to use an already loaded city?
         if ($this->useLoadedCity($input, $output, $helper)) {
             $city = $this->selectCity($input, $output, $helper);
-		}else{
+        } else {
             $this->getApplication()->find('add-city')->run($input, $output);
             $city = $this->selectCity($input, $output, $helper);
         }
 
-        $datasetsDir = $this->datasetsDirectory.$city->bikestormingId.'/';
+
+        $datasetsDir = $this->datasetsDirectory . $city->bikestormingId . '/';
 
         if ($geojsons = $this->getGeojsonsInDirectory($datasetsDir)) {
             $layers = $this->getLayersFromFileName($geojsons);
-            if (! $this->askToProcessAllLayers($layers, $input, $output, $helper, $datasetsDir)){
+            if (!$this->askToProcessAllLayers($layers, $input, $output, $helper, $datasetsDir)) {
                 $layers = $this->addDatasets($input, $output, $helper);
             }
-        }else{
+        } else {
             $output->writeln("<error>There are no geojson files to process in $datasetsDir - Please add them and try again</error>");
+
             return false;
         }
 
@@ -79,13 +83,14 @@ class ProcessDatasets extends MapstormingCommand {
         );
         $upload = $helper->ask($input, $output, $question);
 
-        if ($upload){
+        if ($upload) {
             $command = $this->getApplication()->find('export');
             $arguments = array(
-                'command' => 'export',
-                '--upload'  => true,
+                'command'  => 'export',
+                '--upload' => true,
             );
             $input = new ArrayInput($arguments);
+
             return $command->run($input, $output);
         }
 
@@ -137,6 +142,7 @@ class ProcessDatasets extends MapstormingCommand {
     protected function useLoadedCity(InputInterface $input, OutputInterface $output, $helper)
     {
         $question = new ConfirmationQuestion("\n<ask>Do you want to use one of the above? (yes/no):</ask> ", false);
+
         return $helper->ask($input, $output, $question);
     }
 
@@ -190,14 +196,14 @@ class ProcessDatasets extends MapstormingCommand {
 
             // if it is not a layer, show help
             if (!in_array($res, $this->config->layers)) {
-                $output->writeln('<error>'.$res.' is not a valid option.</error>');
+                $output->writeln('<error>' . $res . ' is not a valid option.</error>');
                 $output->writeln('Type <info>list</info> to see which datasets are available.');
                 $output->writeln('Alternatively, type <info>done</info> when you are ready to move on.');
                 continue;
             }
 
             $layers[] = $res;
-            $output->writeln('<say>Added '.$res.' to the processing list.</say>');
+            $output->writeln('<say>Added ' . $res . ' to the processing list.</say>');
         }
     }
 
@@ -209,30 +215,44 @@ class ProcessDatasets extends MapstormingCommand {
     {
         $files = array_diff(scandir($directory), ['..', '.', '.DS_Store']);
         $geojsons = [];
-        foreach($files as $file){
+        foreach ($files as $file) {
             if (preg_match('|.geojson|', $file)) $geojsons[] = $file;
         }
+
         return $geojsons;
     }
 
     private function getLayersFromFileName($geojsons)
     {
         $layers = [];
-        foreach ($geojsons as $file){
+        foreach ($geojsons as $file) {
             preg_match('|[a-z]*_([a-zA-Z_]*).geojson|', $file, $res);
             $layers[] = $res[1];
         }
+
         return $layers;
     }
 
-    private function askToProcessAllLayers($layers, Input $input,Output $output, Helper $helper, $directory)
+    private function askToProcessAllLayers($layers, Input $input, Output $output, Helper $helper, $directory)
     {
         $output->writeln("\n<say>These are all the datasets ready to be processed:</say>");
-        foreach($layers as $layer){
+        foreach ($layers as $layer) {
             $output->writeln("- $layer");
         }
         $question = new ConfirmationQuestion("\n<ask>Do you want to process all of them? (yes/no): </ask>", false);
+
         return $helper->ask($input, $output, $question);
+    }
+
+    private function checkCitiesFolderExists($allCities)
+    {
+        $files = array_diff(scandir($this->datasetsDirectory), ['..', '.', '.DS_Store']);
+        var_dump($files);
+        foreach ($allCities as $city) {
+            if (!in_array($city->bikestormingId, $files)) {
+                mkdir($this->datasetsDirectory . $city->bikestormingId);
+            }
+        }
     }
 
 }
