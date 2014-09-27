@@ -21,7 +21,6 @@ class DB {
     public function getAll($collection)
     {
         exec("mongo --quiet {$this->MONGO_SERVER}/{$this->MONGO_DB} -u {$this->MONGO_USER} -p{$this->MONGO_PWD} --eval='printjsononeline(db.$collection.find({}).toArray())'", $result);
-
         return $this->parse($result);
     }
 

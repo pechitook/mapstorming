@@ -123,8 +123,8 @@ class AddCity extends MapstormingCommand {
         $city->mapConfig->centerZoom = (int)str_replace('map=', '', $parsed[0]);
         $city->mapConfig->centerLat = (double) $parsed[1];
         $city->mapConfig->centerLng = (double) $parsed[2];
-        $city->minZoom = 11;
-        $city->maxZoom = 17;
+        $city->mapConfig->minZoom = 11;
+        $city->mapConfig->maxZoom = 17;
 
         return $city;
     }

@@ -31,7 +31,6 @@ class Scrap extends MapstormingCommand {
     {
         $this->config = new Config();
         $this->city = new City();
-        $this->allCities = $this->city->getAll();
 
         $this->setName('get')
             ->setDescription("Let's go get some datasets!")
@@ -42,6 +41,8 @@ class Scrap extends MapstormingCommand {
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
+        // Get cities info from DB
+        $this->allCities = $this->city->getAll();
         $output = $this->setOutputFormat($output);
         $helper = $this->getHelper('question');
 
@@ -59,7 +60,7 @@ class Scrap extends MapstormingCommand {
             $question = new ValidableQuestion("<ask>Which city do you want to get datasets from?: </ask>", ['required']);
             $question->setAutocompleterValues($this->city->getNames($this->allCities, true));
             $cityName = $helper->ask($input, $output, $question);
-            $cityId = $this->city->getByName($cityName, true)->bikestormingId;
+            $cityId = $this->city->getByName($this->allCities, $cityName, true)->bikestormingId;
 
             // Get the source
             $sources = $this->config->scrapSourcesFor($dataset);

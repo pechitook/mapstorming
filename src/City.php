@@ -23,10 +23,11 @@ class City {
         return $db->getAll('cities');
     }
 
-    public function getByName($cityName, $lowercase = false)
+    public function getByName($cities, $name, $lowercase = false)
     {
-        foreach ($this->all as $city){
-            $search = $lowercase ? ucwords($cityName) : $cityName;
+        $cities = $this->isCitiesSet($cities);
+        foreach ($cities as $city){
+            $search = $lowercase ? ucwords($name) : $name;
             if ($city->name == $search){
                 return $city;
             }
@@ -34,9 +35,7 @@ class City {
     }
     public function getById($cityId, $cities = null)
     {
-        if (!$cities){
-            $cities = $this->getAll();
-        }
+        $cities = $this->isCitiesSet($cities);
         foreach ($cities as $city){
             if ($city->bikestormingId == $cityId){
                 return $city;
@@ -44,14 +43,9 @@ class City {
         }
     }
 
-    public function deleteByBikestormingID($id)
+    public function deleteByBikestormingID($id, $cities = null)
     {
-        foreach ($this->all as $key => $city){
-            if ($city->bikestormingId == $id){
-                unset($this->all[$key]);
-            }
-        }
-        $this->save();
+        var_dump('TODO: Delete city');
     }
 
     public function getAllBikestormingIDs()
@@ -78,5 +72,18 @@ class City {
         $data = new \StdClass();
         $data->name = $dataset;
         $db->addItem(json_encode($data), ['bikestormingId', $city->bikestormingId], 'cities', 'layers');
+    }
+
+    /**
+     * @param $cities
+     * @return mixed
+     */
+    protected function isCitiesSet($cities)
+    {
+        if (!$cities) {
+            $cities = $this->getAll();
+            return $cities;
+        }
+        return $cities;
     }
 }

@@ -8,20 +8,20 @@ class Project {
         $output = new \StdClass();
 
         $output->bounds = [
-            $city->SWLng,
-            $city->SWLat,
-            $city->NELng,
-            $city->NELat
+            $city->bounds->SWLng,
+            $city->bounds->SWLat,
+            $city->bounds->NELng,
+            $city->bounds->NELat
         ];
         $output->center = [
-            $city->centerLng,
-            $city->centerLat,
-            $city->centerZoom
+            $city->mapConfig->centerLng,
+            $city->mapConfig->centerLat,
+            $city->mapConfig->centerZoom
         ];
         $output->format = "png";
         $output->interactivity = false;
-        $output->minzoom = $city->minZoom;
-        $output->maxzoom = $city->maxZoom;
+        $output->minzoom = $city->mapConfig->minZoom;
+        $output->maxzoom = $city->mapConfig->maxZoom;
         $output->srs = "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over";
         $output->Stylesheet = ['style.mss'];
         $output->Layer = [];

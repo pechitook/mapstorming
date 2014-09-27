@@ -29,7 +29,7 @@ class ProcessDatasets extends MapstormingCommand {
 
 	protected function configure()
     {
-    	$this->config = new Config();
+        $this->config = new Config();
         $this->project = new Project();
         $this->city = new City();
         $this->datasetsDirectory = __DIR__.'/../../tilemill_project/datasets/';
@@ -121,7 +121,7 @@ class ProcessDatasets extends MapstormingCommand {
         $output->writeln("\n<say>Loading cities...</say>");
         // Actually call the remote DB to load the cities
         $this->allCities = $this->city->getAll();
-        $output->writeln("\n<say>We have " . count($this->allCities) . " cities in our database:</say>");
+        $output->writeln("<say>We have <high>" . count($this->allCities) . " cities</high> in our database:</say>");
 
         foreach ($this->allCities as $city) {
             $output->writeln("- " . $city->name);
@@ -158,7 +158,7 @@ class ProcessDatasets extends MapstormingCommand {
 
         $output->writeln("\n<say>*** <high>$cityName</high> it is! ***</say>");
 
-        return $this->city->getByName($cityName);
+        return $this->city->getByName($this->allCities, $cityName);
 
     }
 
