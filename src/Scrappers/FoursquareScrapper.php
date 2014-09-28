@@ -26,7 +26,7 @@ class FoursquareScrapper implements ScrapperInterface {
         $q = $queries[$dataset];
 
         //$ll = number_format($city->mapConfig->centerLat, 1) . ',' . number_format($city->mapConfig->centerLng, 1);
-        $near = $city->name.', '.$city->country->name;
+        $near = urlencode($city->name).', '.$city->country->name;
 
         for ($i = 0; $i < 400; $i += 50) {
             $offset = $i;

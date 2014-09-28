@@ -23,12 +23,11 @@ class City {
         return $db->getAll('cities');
     }
 
-    public function getByName($cities, $name, $lowercase = false)
+    public function getByName($cities, $name)
     {
         $cities = $this->isCitiesSet($cities);
         foreach ($cities as $city){
-            $search = $lowercase ? ucwords($name) : $name;
-            if ($city->name == $search){
+            if (strtolower($city->name) == strtolower($name)){
                 return $city;
             }
         }

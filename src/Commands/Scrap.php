@@ -60,7 +60,7 @@ class Scrap extends MapstormingCommand {
             $question = new ValidableQuestion("<ask>Which city do you want to get datasets from?: </ask>", ['required']);
             $question->setAutocompleterValues($this->city->getNames($this->allCities, true));
             $cityName = $helper->ask($input, $output, $question);
-            $cityId = $this->city->getByName($this->allCities, $cityName, true)->bikestormingId;
+            $cityId = $this->city->getByName($this->allCities, $cityName)->bikestormingId;
 
             // Get the source
             $sources = $this->config->scrapSourcesFor($dataset);
