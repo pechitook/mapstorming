@@ -7,6 +7,7 @@ require 'vendor/autoload.php';
 
 use Mapstorming\Commands\AddCity;
 use Mapstorming\Commands\DeleteCity;
+use Mapstorming\Commands\EditCity;
 use Mapstorming\Commands\ExportMbtiles;
 use Mapstorming\Commands\ProcessDatasets;
 use Mapstorming\Commands\Scrap;
@@ -20,6 +21,7 @@ $application->setVersion(0.1);
 
 $application->add($process);
 $application->add(new AddCity());
+$application->add(new EditCity());
 $application->add(new DeleteCity());
 $application->add(new ExportMbtiles());
 $application->add(new Scrap());

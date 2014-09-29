@@ -7,36 +7,57 @@ use MongoClient;
 class City {
 
     protected $all;
+    protected $editableFields = [
+        'localName',
+        'localLanguage',
+        'atlasImage' => ['bronco', 'chita', 'jorge', 'julia', 'placeholder'],
+        'country.code',
+        'bounds.SWLng',
+        'bounds.SWLat',
+        'bounds.NELng',
+        'bounds.NELat',
+        'mapConfig.minZoom',
+        'mapConfig.maxZoom',
+        'mapConfig.centerLat',
+        'mapConfig.centerLng',
+        'mapConfig.centerZoom',
+    ];
 
-    public function __construct(){
-        $this->all = json_decode(file_get_contents(__DIR__.'/../data/cities.json'));
+    public function __construct()
+    {
+        $this->all = json_decode(file_get_contents(__DIR__ . '/../data/cities.json'));
     }
 
-    public function add($city){
+    public function add($city)
+    {
         $db = new DB();
         if ($db->insert('cities', json_encode($city))) return true;
+
         return false;
     }
 
-    public function getAll(){
+    public function getAll()
+    {
         $db = new DB();
+
         return $db->getAll('cities');
     }
 
     public function getByName($cities, $name)
     {
         $cities = $this->isCitiesSet($cities);
-        foreach ($cities as $city){
-            if (strtolower($city->name) == strtolower($name)){
+        foreach ($cities as $city) {
+            if (strtolower($city->name) == strtolower($name)) {
                 return $city;
             }
         }
     }
+
     public function getById($cityId, $cities = null)
     {
         $cities = $this->isCitiesSet($cities);
-        foreach ($cities as $city){
-            if ($city->bikestormingId == $cityId){
+        foreach ($cities as $city) {
+            if ($city->bikestormingId == $cityId) {
                 return $city;
             }
         }
@@ -53,6 +74,7 @@ class City {
         foreach ($this->all as $city) {
             $arr[] = $city->bikestormingId;
         }
+
         return $arr;
     }
 
@@ -62,6 +84,7 @@ class City {
         foreach ($allCities as $city) {
             $arr[] = $lowercase ? strtolower($city->name) : $city->name;
         }
+
         return $arr;
     }
 
@@ -81,8 +104,10 @@ class City {
     {
         if (!$cities) {
             $cities = $this->getAll();
+
             return $cities;
         }
+
         return $cities;
     }
 }

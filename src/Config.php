@@ -2,7 +2,8 @@
 
 class Config {
 
-    public function __construct(){
+    public function __construct()
+    {
         $this->fullpath = getenv('FULLPATH');
         $this->layers = [
             'bike_shop',

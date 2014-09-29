@@ -12,12 +12,10 @@ use Symfony\Component\Console\Question\ConfirmationQuestion;
 
 
 /**
- * @property Project project
  * @property Config config
+ * @property City city
  */
 class AddCity extends MapstormingCommand {
-
-    protected $data = [];
 
     protected function configure()
     {
@@ -48,6 +46,7 @@ class AddCity extends MapstormingCommand {
         // City Name
         $question = new ValidableQuestion("<ask><high>Name</high> of the city?: </ask>", ["required"]);
         $city->name = $helper->ask($input, $output, $question);
+        $city->localName = $city->name;
 
         // Country
         $question = new ValidableQuestion("<ask>Which <high>Country</high> is it in?: </ask>", ["required"]);
@@ -86,6 +85,9 @@ class AddCity extends MapstormingCommand {
         $output->writeln("<ask>Bikestorming ID:</ask> {$city->bikestormingId}");
 
         $confirm = $helper->ask($input, $output, new ConfirmationQuestion("\n<ask>Is this correct? (yes/no): </ask>", true));
+
+        // Default extra values
+        $city->atlasImage = "placeholder";
 
         // Add the city
         if ($confirm){
