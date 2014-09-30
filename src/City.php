@@ -91,9 +91,7 @@ class City {
     public function addLayer($dataset, $city)
     {
         $db = new DB();
-        $data = new \StdClass();
-        $data->name = $dataset;
-        $db->addItem(json_encode($data), ['bikestormingId', $city->bikestormingId], 'cities', 'layers');
+        $db->addLayer($dataset, ['bikestormingId', $city->bikestormingId], 'cities');
     }
 
     /**

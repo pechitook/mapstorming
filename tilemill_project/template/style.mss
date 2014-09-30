@@ -284,6 +284,64 @@
   }
    
 }
+/**  ———————————————————————————————————————————— 3b WIFI VENUES —————————————————————— **/
+
+
+.wifi_venues {
+  marker-line-width:0;
+  marker-opacity:0.7;
+  marker-fill:#33ffff;
+
+  [zoom>=10] {
+    marker-width:2;
+    marker-allow-overlap:true;
+  }
+
+  [zoom>=11] {
+    marker-width:3;
+    marker-allow-overlap:true;
+  }
+
+  [zoom>=12] {
+    marker-width:4;
+    marker-allow-overlap:true;
+  }
+
+  [zoom>=13] {
+    marker-width:5;
+    marker-allow-overlap:true;
+  }
+
+  [zoom>=14] {
+    point-opacity: 1;
+    marker-width:15;
+    marker-allow-overlap:true;
+    point-file: url(images/wifi.svg);
+  point-allow-overlap:true;
+    point-transform:"scale(0.15)";
+  }
+
+
+  [zoom>=15] {
+    point-opacity: 1;
+    marker-width:25;
+    marker-allow-overlap:true;
+    point-file: url(images/wifi.svg);
+    point-allow-overlap:true;
+    point-transform:"scale(0.25)";
+  }
+
+
+  [zoom>=16] {
+    point-opacity: 1;
+    marker-width:30;
+    marker-allow-overlap:true;
+    point-file: url(images/wifi.svg);
+    point-allow-overlap:true;
+    point-transform:"scale(0.3)";
+  }
+
+}
 
 /**  ———————————————————————————————————————————— 4 REWARD —————————————————————— **/  
 

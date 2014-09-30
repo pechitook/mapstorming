@@ -88,6 +88,7 @@ class AddCity extends MapstormingCommand {
 
         // Default extra values
         $city->atlasImage = "placeholder";
+        $city->layers = new \StdClass();
 
         // Add the city
         if ($confirm){

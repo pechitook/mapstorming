@@ -41,10 +41,12 @@ class Scrap extends MapstormingCommand {
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        // Get cities info from DB
-        $this->allCities = $this->city->getAll();
         $output = $this->setOutputFormat($output);
         $helper = $this->getHelper('question');
+
+        // Get cities info from DB
+        $output->writeln("<say>Loading cities from DB...</say>");
+        $this->allCities = $this->city->getAll();
 
         $dataset = $input->getArgument('dataset');
         $cityId = $input->getArgument('cityId');
@@ -79,9 +81,6 @@ class Scrap extends MapstormingCommand {
 
         $countItems = count(json_decode($data)->features);
         $savedFile = $this->saveDataset($dataset, $this->city->getById($cityId), $data);
-
-        // Add layer to city's document on DB
-        $this->city->addLayer($dataset, $this->city->getById($cityId, $this->allCities));
 
         $output->writeln("<ask>$countItems items saved to $savedFile");
     }

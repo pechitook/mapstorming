@@ -20,7 +20,7 @@ class FoursquareScrapper implements ScrapperInterface {
         $city = $this->city->getById($cityId);
 
         $queries = [
-            'free_wifi' => 'wifi'
+            'wifi_venues' => 'wifi'
         ];
 
         $q = $queries[$dataset];

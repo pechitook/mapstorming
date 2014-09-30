@@ -46,12 +46,17 @@ class DB {
         return false;
     }
 
-    public function addItem($data, $match, $collection, $parent)
+    public function addLayer($dataset, $match, $collection)
     {
         // Adds only $data to $parent if it is not already there.
-        $query = "mongo --quiet {$this->MONGO_SERVER}/{$this->MONGO_DB} -u {$this->MONGO_USER} -p{$this->MONGO_PWD} --eval='db.$collection.update( { $match[0]: \"$match[1]\" }, {\$addToSet: { $parent: $data } } )'";
-        exec($query, $result);
-
+        $query = "db.$collection.update( { $match[0]: \"$match[1]\" }, {\$set: { \"layers.$dataset\": {\"active\": true} } } )";
+        $this->run($query);
         return true;
+    }
+
+    private function run($query){
+        $command = "mongo --quiet {$this->MONGO_SERVER}/{$this->MONGO_DB} -u {$this->MONGO_USER} -p{$this->MONGO_PWD} --eval='$query'";
+        exec($command, $result);
+        return $result;
     }
 } 

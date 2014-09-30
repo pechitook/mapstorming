@@ -10,7 +10,7 @@ class Config {
             'safe_parking',
             'air_pump',
             'free_wifi',
-            'wifi_cafe',
+            'wifi_venues',
             'cyclestreet',
             'cycleway',
             'weekend_cycleway',
@@ -27,7 +27,7 @@ class Config {
             'public_bike',
         ];
         $this->scrapSources = [
-            'free_wifi' => [
+            'wifi_venues' => [
                 'foursquare'
             ],
             'bike_shop' => [

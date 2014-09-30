@@ -82,6 +82,7 @@ class ExportMbtiles extends MapstormingCommand {
         $output->writeln("<say>We're processing <high>" . count($project->Layer) . " layers</high> from geojsons to mbtiles!</say>");
 
         foreach ($project->Layer as $layer) {
+
             $project = $this->turnAllLayersExcept($project, $layer);
             $project->name = $layer->name;
             $this->project->save($project);
@@ -95,6 +96,11 @@ class ExportMbtiles extends MapstormingCommand {
                 $output->writeln("<say>Uploading <high>{$layer->name}...</high></say>");
                 $this->uploadLayer($layer);
                 $output->writeln("<say>Uploaded <high>{$layer->name}</high> successfully</say>");
+
+                // Add layer to city's document on DB
+                $output->writeln("<say>Adding <high>{$layer->name}</high> to DB...</say>");
+                $this->city->addLayer($this->getDatasetName($layer->name), $this->city->getById($this->getCityId($layer->name)));
+                $output->writeln("<ask>Done!</ask>");
             }
         }
 
@@ -155,6 +161,18 @@ class ExportMbtiles extends MapstormingCommand {
     protected function cleanMbtiles()
     {
         exec('rm -rf ' . $this->configTilemill['outputMBTiles'] . '/*');
+    }
+
+    private function getDatasetName($layer)
+    {
+        preg_match('|bk[a-zA-Z]*_([a-zA-Z_]*)|', $layer, $res);
+        return $res[1];
+    }
+
+    private function getCityId($layer)
+    {
+        preg_match('|bk([a-zA-Z]*)_|', $layer, $res);
+        return $res[1];
     }
 
 }
