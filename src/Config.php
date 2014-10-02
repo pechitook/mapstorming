@@ -40,6 +40,9 @@ class Config {
             'racks' => [
                 'overpassturbo'
             ],
+            'cobblestone' => [
+                'overpassturbo'
+            ],
         ];
     }
 
