@@ -37,6 +37,9 @@ class Config {
             'bike_shop' => [
                 'overpassturbo'
             ],
+            'racks' => [
+                'overpassturbo'
+            ],
         ];
     }
 
