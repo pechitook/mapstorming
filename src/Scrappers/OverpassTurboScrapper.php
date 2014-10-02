@@ -49,7 +49,8 @@ class OverpassturboScrapper implements ScrapperInterface {
 
     private function processGist($gistURL)
     {
-        $gistId = end(explode('/', parse_url($gistURL)['path']));
+        $parsedurl = explode('/', parse_url($gistURL)['path']);
+        $gistId = end($parsedurl);
         $url = 'https://api.github.com/gists/'.$gistId;
         $pag = $this->client->get($url);
         $obj = $pag->json();
