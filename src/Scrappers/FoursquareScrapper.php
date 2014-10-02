@@ -15,7 +15,7 @@ class FoursquareScrapper implements ScrapperInterface {
         CacheSubscriber::attach($this->client);
     }
 
-    public function scrap($cityId, $dataset)
+    public function scrap($cityId, $dataset, $input, $output)
     {
         $city = $this->city->getById($cityId);
 

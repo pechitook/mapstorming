@@ -26,12 +26,16 @@ class Config {
             'rewards',
             'public_bike',
         ];
+
         $this->scrapSources = [
             'wifi_venues' => [
                 'foursquare'
             ],
+            'cycleway' => [
+                'overpassturbo'
+            ],
             'bike_shop' => [
-                'google'
+                'overpassturbo'
             ],
         ];
     }

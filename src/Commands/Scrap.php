@@ -53,16 +53,16 @@ class Scrap extends MapstormingCommand {
         $source = $input->getOption('source');
 
         if (! $dataset || ! $cityId || ! $source) {
+            // Get the City ID
+            $question = new ValidableQuestion("<ask>Which city do you want to get datasets to?: </ask>", ['required']);
+            $question->setAutocompleterValues($this->city->getNames($this->allCities, true));
+            $cityName = $helper->ask($input, $output, $question);
+            $cityId = $this->city->getByName($this->allCities, $cityName)->bikestormingId;
+
             // Get the Dataset
             $question = new ValidableQuestion("<ask>Which dataset do you want to get?: </ask>", ['required']);
             $question->setAutocompleterValues($this->config->layers);
             $dataset = $helper->ask($input, $output, $question);
-
-            // Get the City ID
-            $question = new ValidableQuestion("<ask>Which city do you want to get datasets from?: </ask>", ['required']);
-            $question->setAutocompleterValues($this->city->getNames($this->allCities, true));
-            $cityName = $helper->ask($input, $output, $question);
-            $cityId = $this->city->getByName($this->allCities, $cityName)->bikestormingId;
 
             // Get the source
             $sources = $this->config->scrapSourcesFor($dataset);
@@ -77,7 +77,7 @@ class Scrap extends MapstormingCommand {
 
         $output->writeln("\n<say>Getting <high>$dataset</high> from <high>$source</high> for <high>".strtoupper($cityId)."</high>... Please stand by.</say>");
         $scrapper = ScrapperFactory::getInstance($source);
-        $data = $scrapper->scrap($cityId, $dataset);
+        $data = $scrapper->scrap($cityId, $dataset, $input, $output);
 
         $countItems = count(json_decode($data)->features);
         $savedFile = $this->saveDataset($dataset, $this->city->getById($cityId), $data);
