@@ -22,7 +22,7 @@ class AddCity extends MapstormingCommand {
         $this->config = new Config();
         $this->city = new City();
 
-        $this->setName('add-city')
+        $this->setName('open')
             ->setDescription('Add a new City')
 //             ->addArgument(
 //                 'directory',
@@ -55,7 +55,8 @@ class AddCity extends MapstormingCommand {
 
         // Bikestorming ID
         $question = new ValidableQuestion("<ask>Bikestorming ID? (ba, bgt, crml, etc...): </ask>", ["required"]);
-        $city->bikestormingId = $helper->ask($input, $output, $question);
+        $bkid = $helper->ask($input, $output, $question);
+        $city->bikestormingId = strtolower($bkid);
 
         // Boundaries
         $output->writeln("\n***");
