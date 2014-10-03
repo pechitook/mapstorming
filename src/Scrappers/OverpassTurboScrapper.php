@@ -42,7 +42,7 @@ class OverpassturboScrapper implements ScrapperInterface {
 
         $output->writeln("\n<say>Now click on <high>Export</high> and then select <high>save GeoJSON to gist</high>...</say>");
 
-        $question = new ValidableQuestion("<say>Paste gist's URL <ask>➡</ask>   </say>", ["required"]);
+        $question = new ValidableQuestion("<say>Paste gist's URL <ask>➡</ask>  </say>", ["required"]);
         $gistURL = $this->helper->ask($input, $output, $question);
 
         $data = $this->processGist($gistURL);
