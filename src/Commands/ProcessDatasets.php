@@ -3,6 +3,7 @@
 use Mapstorming\City;
 use Mapstorming\Config;
 use Mapstorming\Project;
+use Mapstorming\ValidableQuestion;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Helper\Helper;
@@ -34,8 +35,8 @@ class ProcessDatasets extends MapstormingCommand {
         $this->city = new City();
         $this->datasetsDirectory = __DIR__ . '/../../tilemill_project/datasets/';
 
-        $this->setName('process')
-            ->setDescription('Process GeoJSON datasets with Tilemill');
+        $this->setName('vamoarriba')
+            ->setDescription('Process GeoJSON datasets with Tilemill and/or upload to Mapbox');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -54,20 +55,24 @@ class ProcessDatasets extends MapstormingCommand {
         $this->checkCitiesFolderExists($this->allCities);
 
         // Does the user want to use an already loaded city?
-        if ($this->useLoadedCity($input, $output, $helper)) {
-            $city = $this->selectCity($input, $output, $helper);
-        } else {
-            $this->getApplication()->find('add-city')->run($input, $output);
-            $city = $this->selectCity($input, $output, $helper);
-        }
+        //if ($this->useLoadedCity($input, $output, $helper)) {
+        //    $city = $this->selectCity($input, $output, $helper);
+        //} else {
+        //    $this->getApplication()->find('add-city')->run($input, $output);
+        //    $city = $this->selectCity($input, $output, $helper);
+        //}
 
+        // Make user select one of the cities
+        $city = $this->selectCity($input, $output, $helper);
 
         $datasetsDir = $this->datasetsDirectory . $city->bikestormingId . '/';
 
         if ($geojsons = $this->getGeojsonsInDirectory($datasetsDir)) {
+            // Lets grab all datasets from the city's folder
             $layers = $this->getLayersFromFileName($geojsons);
             if (!$this->askToProcessAllLayers($layers, $input, $output, $helper, $datasetsDir)) {
-                $layers = $this->addDatasets($input, $output, $helper);
+                // Don't process them all, add manaully.
+                $layers = $this->addDatasets($input, $output, $helper, $layers);
             }
         } else {
             $output->writeln("<error>There are no geojson files to process in 'tilemill_project/datasets/{$city->bikestormingId}' \nPlease add them and try again</error>");
@@ -128,8 +133,11 @@ class ProcessDatasets extends MapstormingCommand {
         $this->allCities = $this->city->getAll();
         $output->writeln("<say>We have <high>" . count($this->allCities) . " cities</high> in our database:</say>");
 
-        foreach ($this->allCities as $city) {
-            $output->writeln("- " . $city->name);
+        $citiesNames = $this->city->getNames($this->allCities);
+        sort($citiesNames);
+
+        foreach ($citiesNames as $name) {
+            $output->writeln("- " . $name);
         }
     }
 
@@ -153,13 +161,9 @@ class ProcessDatasets extends MapstormingCommand {
      */
     protected function selectCity(InputInterface $input, OutputInterface $output, $helper)
     {
-        $question = new ChoiceQuestion(
-            "\n<say>Please select which city you want to work with</say>",
-            $this->city->getNames($this->allCities)
-        );
-
-        $question->setErrorMessage('Please use the number in [brackets] to refer to the city.');
-
+        $question = new ValidableQuestion("\n<say>Which city you want to work with? </say>", ['required']);
+        // set autocompleter values to city names, including all lowercase
+        $question->setAutocompleterValues(array_merge($this->city->getNames($this->allCities), $this->city->getNames($this->allCities, true)));
         $cityName = $helper->ask($input, $output, $question);
 
         $output->writeln("\n<say>*** <high>$cityName</high> it is! ***</say>");
@@ -172,13 +176,15 @@ class ProcessDatasets extends MapstormingCommand {
      * @param InputInterface $input
      * @param OutputInterface $output
      * @param $helper
+     * @param $allLayers
      * @return array
      */
-    protected function addDatasets(InputInterface $input, OutputInterface $output, $helper)
+    protected function addDatasets(InputInterface $input, OutputInterface $output, $helper, $allLayers)
     {
         $layers = [];
         while ($res != 'done') {
-            $question = new Question('<info>Which datasets do you want to process? </info>', null);
+            $question = new Question('<info>Which datasets do you want to process? </info>');
+            $question->setAutocompleterValues($allLayers);
             $res = $helper->ask($input, $output, $question);
 
             // show list
@@ -186,19 +192,10 @@ class ProcessDatasets extends MapstormingCommand {
                 return $layers;
             }
 
-            // show list
-            if ($res == 'list') {
-                foreach ($this->config->layers as $layer) {
-                    $output->writeln("- $layer");
-                }
-                continue;
-            }
-
             // if it is not a layer, show help
             if (!in_array($res, $this->config->layers)) {
                 $output->writeln('<error>' . $res . ' is not a valid option.</error>');
-                $output->writeln('Type <info>list</info> to see which datasets are available.');
-                $output->writeln('Alternatively, type <info>done</info> when you are ready to move on.');
+                $output->writeln('Type <info>done</info> when you are ready to move on.');
                 continue;
             }
 
