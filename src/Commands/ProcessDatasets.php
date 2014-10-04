@@ -35,7 +35,7 @@ class ProcessDatasets extends MapstormingCommand {
         $this->city = new City();
         $this->datasetsDirectory = __DIR__ . '/../../tilemill_project/datasets/';
 
-        $this->setName('vamoarriba')
+        $this->setName('up')
             ->setDescription('Process GeoJSON datasets with Tilemill and/or upload to Mapbox');
     }
 
