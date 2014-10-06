@@ -7,6 +7,7 @@ use MongoClient;
 class City {
 
     protected $all;
+    protected $db;
     protected $editableFields = [
         'localName',
         'localLanguage',
@@ -30,7 +31,7 @@ class City {
 
     public function add($city)
     {
-        $db = new DB();
+        $db = $this->getDB();
         if ($db->insert('cities', json_encode($city))) return true;
 
         return false;
@@ -38,7 +39,7 @@ class City {
 
     public function getAll()
     {
-        $db = new DB();
+        $db = $this->getDB();
 
         return $db->getAll('cities');
     }
@@ -90,7 +91,7 @@ class City {
 
     public function addLayer($dataset, $city)
     {
-        $db = new DB();
+        $db = $this->getDB();
         $db->addLayer($dataset, ['bikestormingId', $city->bikestormingId], 'cities');
     }
 
@@ -107,5 +108,25 @@ class City {
         }
 
         return $cities;
+    }
+
+    public function activate($city)
+    {
+        $db = $this->getDB();
+        $db->changeValue('active', true, 'cities', ['bikestormingId' => $city->bikestormingId]);
+    }
+
+    public function setOrder($city, $order)
+    {
+        $db = $this->getDB();
+        $db->changeValue('order', $order, 'cities', ['bikestormingId' => $city->bikestormingId]);
+    }
+
+    private function getDB()
+    {
+        if (!$this->db){
+            $this->db = new DB();
+        }
+        return $this->db;
     }
 }

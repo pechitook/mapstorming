@@ -5,6 +5,7 @@
 if (!getenv('IS_DEBUG')) error_reporting(E_STRICT);
 require 'vendor/autoload.php';
 
+use Mapstorming\Commands\ActivateCityCommand;
 use Mapstorming\Commands\AddCity;
 use Mapstorming\Commands\DeleteCity;
 use Mapstorming\Commands\EditCity;
@@ -22,6 +23,7 @@ $application->setVersion(0.1);
 $application->add($process);
 $application->add(new AddCity());
 $application->add(new EditCity());
+$application->add(new ActivateCityCommand());
 $application->add(new DeleteCity());
 $application->add(new ExportMbtiles());
 $application->add(new Scrap());

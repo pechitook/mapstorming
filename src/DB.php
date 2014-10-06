@@ -59,4 +59,17 @@ class DB {
         exec($command, $result);
         return $result;
     }
+
+    public function changeValue($field, $value, $collection, array $matches)
+    {
+        // process matches array
+        $match = new \StdClass();
+        foreach($matches as $matchField => $matchValue){
+            $match->$matchField = $matchValue;
+        }
+
+        //prepare query
+        $query = "db.$collection.update( ".json_encode($match).", {\$set: { $field: ".json_encode($value)." } } )";
+        $this->run($query);
+    }
 } 

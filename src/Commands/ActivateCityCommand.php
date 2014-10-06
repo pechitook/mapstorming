@@ -14,7 +14,7 @@ use Symfony\Component\Console\Question\ConfirmationQuestion;
  * @property Config config
  * @property City city
  */
-class EditCity extends MapstormingCommand {
+class ActivateCityCommand extends MapstormingCommand {
 
     protected $allCities;
 
@@ -23,8 +23,8 @@ class EditCity extends MapstormingCommand {
         $this->config = new Config();
         $this->city = new City();
 
-        $this->setName('edit')
-            ->setDescription('Edit a city')
+        $this->setName('activate')
+            ->setDescription('Activate a city in Bikestorming app')
 //             ->addArgument(
 //                 'directory',
 //                 InputArgument::OPTIONAL,
@@ -40,21 +40,32 @@ class EditCity extends MapstormingCommand {
         // Helper to ask questions through Console
         $helper = $this->getHelper('question');
         // Welcome message
-        $output->writeln("\n<say>Hello again! Let me grab the cities from the <high>DB</high>...</say>");
+        $output->writeln("\n<say>Let me grab all the inactive cities from the <high>DB</high>...</say>");
+
 
         // Get cities from DB
         $this->allCities = $this->city->getAll();
-        $output->writeln("<high>Done!</high>");
+        $output->writeln("\n<say>Ok, here you have them <high>↓ </high></say>");
+
+        // Create array with only inactive cities and display them
+        $unactiveCities = [];
+        foreach($this->allCities as $city){
+            if (!$city->active) {
+                $output->writeln("- {$city->name}");
+                $unactiveCities[] = $city;
+            }
+        }
 
 
         // Get the City
-        $question = new ValidableQuestion("<ask>\nWhich city do you want to edit?: </ask>", ['required']);
-        $question->setAutocompleterValues(array_merge($this->city->getNames($this->allCities), $this->city->getNames($this->allCities, true)));
+        $question = new ValidableQuestion("<ask>\nWhich city do you want to activate?: </ask>", ['required']);
+        $question->setAutocompleterValues(array_merge($this->city->getNames($unactiveCities), $this->city->getNames($unactiveCities, true)));
         $cityName = $helper->ask($input, $output, $question);
 
         $city = $this->city->getByName($this->allCities, $cityName);
 
-        var_dump($city);
+        $this->city->activate($city);
+        $this->city->setOrder($city, 100);
     }
 
 }
