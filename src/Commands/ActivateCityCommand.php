@@ -66,6 +66,32 @@ class ActivateCityCommand extends MapstormingCommand {
 
         $this->city->activate($city);
         $this->city->setOrder($city, 100);
+
+        //
+        $this->showFireworks($output);
+        $output->writeln("\n\n      <say><high>{$city->name}</high> is now live!</say>\n");
+    }
+
+    private function showFireworks($output)
+    {
+        $output->writeln("\n\n                                        .''.      ");
+        $output->writeln("            .''.      .        *''*    :_\\/_:     .      ");
+        $output->writeln("           :_\\/_:   _\\(/_  .:.*_\\/_*   : /\\ :  .'.:.'.      ");
+        $output->writeln("       .''.: /\\ :    /)\\   ':'* /\\ *  : '..'.  -=:o:=-      ");
+        $output->writeln("      :_\\/_:'.:::.  <bk>|</bk> ' *''*    * '.\\'/.'_\\(/_'.':'.'      ");
+        $output->writeln("      : /\\ : :::::  <bk>=</bk>  *_\\/_*     -= o =- /)\\    '  *      ");
+        $output->writeln("       '..'  ':::' <bk>===</bk> * /\\ *     .'/.\\'.  ' <bk>._____</bk>      ");
+        $output->writeln("<bk>           <star>*</star>        |   <star>*..*         :</star>       |.   |' .---\"|      </bk>");
+        $output->writeln("<bk>             <star>*</star>      |     _           .--'|  ||   | _|    |      </bk>");
+        $output->writeln("<bk>             <star>*</star>      |  .-'|       __  |   |  |    ||      |      </bk>");
+        $output->writeln("<bk>          .-----.   |  |' |  ||  |  | |   |  |    ||      |      </bk>");
+        $output->writeln("<bk>      ___'       ' /\"\\ |  '-.\"\".    '-'   '-.'    '`      |____      </bk>");
+        $output->writeln("<say>      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~      </say>");
+        $output->writeln("<say>                            ~-~-~-~-~-~-~-~-~-~   <star>/|</star>      </say>");
+        $output->writeln("<say>      ~-~-~-~-~-      ~-~-~-~-~-~-~-~  <star>/|</star>~       <star>/_|\\ </star>      </say>");
+        $output->writeln("<say>             <star>_-H-__</star>  -~-~-~-~-~-~     <star>/_|\\ </star>    -~<star>======</star>-~      </say>");
+        $output->writeln("<say>     ~-<star>\\XXXXXXXXXX/</star>~     ~-~-~-~     <star>/__|_\\ </star>~-~-~-~      </say>");
+        $output->writeln("<say>     ~-~-~-~-~-~    ~-~~-~-~-~-~   <star> ========</star> ~-~-~-~      </say>");
     }
 
 }
