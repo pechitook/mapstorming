@@ -10,17 +10,19 @@ use Mapstorming\Commands\AddCity;
 use Mapstorming\Commands\DeleteCity;
 use Mapstorming\Commands\EditCity;
 use Mapstorming\Commands\ExportMbtiles;
+use Mapstorming\Commands\MainMenu;
 use Mapstorming\Commands\ProcessDatasets;
 use Mapstorming\Commands\Scrap;
 use Symfony\Component\Console\Application;
 
-$process = new ProcessDatasets();
+$menu = new MainMenu();
 $application = new Application();
 $application->setName('Mapstorming');
-$application->setDefaultCommand($process->getName());
+$application->setDefaultCommand($menu->getName());
 $application->setVersion(0.1);
 
-$application->add($process);
+$application->add($menu);
+$application->add(new ProcessDatasets());
 $application->add(new AddCity());
 $application->add(new EditCity());
 $application->add(new ActivateCityCommand());

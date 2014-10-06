@@ -69,7 +69,7 @@ class ActivateCityCommand extends MapstormingCommand {
 
         //
         $this->showFireworks($output);
-        $output->writeln("\n\n      <say><high>{$city->name}</high> is now live!</say>\n");
+        $output->writeln("\n\n     <say><high>{$city->name}</high> is now live!</say>\n");
     }
 
     private function showFireworks($output)

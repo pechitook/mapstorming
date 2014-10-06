@@ -36,7 +36,7 @@ class ProcessDatasets extends MapstormingCommand {
         $this->datasetsDirectory = __DIR__ . '/../../tilemill_project/datasets/';
 
         $this->setName('up')
-            ->setDescription('Process GeoJSON datasets with Tilemill and/or upload to Mapbox');
+            ->setDescription('Export mbtiles from geojson files and upload them to Mapbox');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -48,7 +48,6 @@ class ProcessDatasets extends MapstormingCommand {
         // Helper to ask questions through Console
         $helper = $this->getHelper('question');
 
-        $this->displayWelcomeMessage($output);
         $this->displayLoadedCities($output);
 
         // Check if a datasets folder exists for each city. If not, create it
@@ -100,27 +99,6 @@ class ProcessDatasets extends MapstormingCommand {
         }
 
         return $this->getApplication()->find('export')->run($input, $output);
-    }
-
-    /**
-     * @param OutputInterface $output
-     */
-    protected function displayWelcomeMessage(OutputInterface $output)
-    {
-        $output->writeln("\n<high>        <star>*</star>     <star>*</star>    <star>*</star>     /\__/\  <star>*</star>    <bk>---</bk>    <star>*</star>     </high>");
-        $output->writeln("<high>           <star>*</star>            /      \    <bk>/     \ </bk>         </high>");
-        $output->writeln("<high>                <star>*</star>   <star>*</star>  |  -  -  |  <bk>|   B   |</bk>   <star>*</star>     </high>");
-        $output->writeln("<high>         <star>*</star>   __________| \     /|  <bk>|   K   |</bk>         </high>");
-        $output->writeln("<high>           /              \ T / |   <bk>\     /</bk>         </high>");
-        $output->writeln("<high>         /                      |  <star>*</star>  <bk>---</bk>     </high>");
-        $output->writeln("<high>        |  ||     |    |       /             <star>*</star>     </high>");
-        $output->writeln("<high>        |  ||    /______\     / | <star>*</star>     <star>*</star>     </high>");
-        $output->writeln("<high>        |  | \  |  /     \   /  |     </high>");
-        $output->writeln("<high>         \/   | |\ \      | | \ \     </high>");
-        $output->writeln("<high>              | | \ \     | |  \ \     </high>");
-        $output->writeln("<high>              | |  \ \    | |   \ \     </high>");
-        $output->writeln("<high>              '''   '''   '''    '''        </high>");
-        $output->writeln("<say>\nWelcome to <high>Mapstorming!</high> Let's open a city together, shall we?</say>");
     }
 
     /**
