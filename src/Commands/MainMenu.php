@@ -16,9 +16,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 class MainMenu extends MapstormingCommand{
 
     protected $menuOptions = [
-        'up',
-        'get',
         'open',
+        'get',
+        'up',
         'activate',
     ];
 
