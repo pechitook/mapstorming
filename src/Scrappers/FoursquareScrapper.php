@@ -3,7 +3,7 @@
 namespace Mapstorming\Scrappers;
 
 
-use GuzzleHttp\Subscriber\Cache\CacheSubscriber;
+use Guzzle\Http\Client;
 use Mapstorming\City;
 
 class FoursquareScrapper implements ScrapperInterface {
@@ -11,8 +11,7 @@ class FoursquareScrapper implements ScrapperInterface {
     public function __construct()
     {
         $this->city = new City();
-        $this->client = new \GuzzleHttp\Client();
-        CacheSubscriber::attach($this->client);
+        $this->client = new Client(['defaults' => ['auth', 'oauth']]);
     }
 
     public function scrap($cityId, $dataset, $input, $output)
@@ -31,11 +30,7 @@ class FoursquareScrapper implements ScrapperInterface {
         for ($i = 0; $i < 400; $i += 50) {
             $offset = $i;
             $url = 'https://api.foursquare.com/v2/venues/explore?client_id=NPW3MDLV4KNVNXZ1BSGL20K01RWOFOIMA3MF2BNJLOBCJQIW&client_secret=PTZEYUDBJ45JN422UAHI0PHAHONPWBLPNF115ER4DWTSNPPI&v=' . date('Ymd') . '&near=' . $near . '&q=' . $q . '&limit=50&offset=' . $offset;
-            $pag = $this->client->get($url, [
-                'headers' => [
-                    'User-Agent' => 'Mozilla/5.0 (Windows NT 6.1; rv:11.0) Gecko/20100101 Firefox/11.0',
-                ]
-            ]);
+            $pag = $this->client->get($url)->send();
             $obj = $pag->json();
             if (!$spots) $spots = [];
             $spots['type'] = 'FeatureCollection';
