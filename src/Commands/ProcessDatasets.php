@@ -69,36 +69,37 @@ class ProcessDatasets extends MapstormingCommand {
         if ($geojsons = $this->getGeojsonsInDirectory($datasetsDir)) {
             // Lets grab all datasets from the city's folder
             $layers = $this->getLayersFromFileName($geojsons);
+            // Ask to process all layers
             if (!$this->askToProcessAllLayers($layers, $input, $output, $helper, $datasetsDir)) {
                 // Don't process them all, add manaully.
                 $layers = $this->addDatasets($input, $output, $helper, $layers);
             }
         } else {
             $output->writeln("<error>There are no geojson files to process in 'tilemill_project/datasets/{$city->bikestormingId}' \nPlease add them and try again</error>");
-
             return false;
         }
 
-        $this->project->create($city, $layers);
-
-        $question = new ConfirmationQuestion(
-            "\n<ask>Do you want to <high>upload</high> the resulting mbtiles to Mapbox? (yes/no): </ask>",
-            false
-        );
+        // Upload to Mapbox?
+        $question = new ConfirmationQuestion("\n<ask>Do you want to <high>upload</high> the resulting mbtiles to Mapbox? (yes/no): </ask>", false);
         $upload = $helper->ask($input, $output, $question);
 
-        if ($upload) {
-            $command = $this->getApplication()->find('export');
-            $arguments = array(
-                'command'  => 'export',
-                '--upload' => true,
-            );
-            $input = new ArrayInput($arguments);
+        foreach ($layers as $layer) {
+            
+            $this->project->create($city, $layer);
+            
+            if ($upload) {
+                $command = $this->getApplication()->find('export');
+                $arguments = array(
+                    'command'  => 'export',
+                    '--upload' => true,
+                );
+                $input = new ArrayInput($arguments);
 
-            return $command->run($input, $output);
+                return $command->run($input, $output);
+            }
+
+            return $this->getApplication()->find('export')->run($input, $output);
         }
-
-        return $this->getApplication()->find('export')->run($input, $output);
     }
 
     /**

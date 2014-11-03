@@ -27,6 +27,28 @@ class Config {
             'public_bike',
         ];
 
+        $this->layerRender = [
+            'bike_shop' => 'point',
+            'safe_parking' => 'point',
+            'air_pump' => 'point',
+            'free_wifi' => 'point',
+            'wifi_venues' => 'point',
+            'cyclestreet' => 'linestring',
+            'cycleway' => 'linestring',
+            'weekend_cycleway' => 'linestring',
+            'cycleroute' => 'linestring',
+            'cobblestone' => 'linestring',
+            'heavy_transit' => 'linestring',
+            'cyclefriendly_street' => 'linestring',
+            'heights' => 'point',
+            'racks' => 'point',
+            'ferry' => 'point',
+            'subway' => 'point',
+            'train' => 'point',
+            'rewards' => 'point',
+            'public_bike' => 'point',  
+        ];
+
         $this->scrapSources = [
             'wifi_venues' => [
                 'foursquare'
