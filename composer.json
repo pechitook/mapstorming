@@ -3,7 +3,7 @@
     "description": "MAPSTORMIN MADAFACA",
     "require": {
         "symfony/console": "dev-master",
-        "guzzlehttp/guzzle": "~4.0",
+        "guzzle/guzzle": "3.9.*@dev",
         "guzzlehttp/cache-subscriber": "0.1.*@dev"
     },
     "autoload": {
