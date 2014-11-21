@@ -98,8 +98,10 @@ class ProcessDatasets extends MapstormingCommand {
                 return $command->run($input, $output);
             }
 
-            return $this->getApplication()->find('export')->run($input, $output);
+            $this->getApplication()->find('export')->run($input, $output);
         }
+
+        return;
     }
 
     /**

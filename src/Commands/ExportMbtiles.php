@@ -74,12 +74,10 @@ class ExportMbtiles extends MapstormingCommand {
         $this->copyProjectData();
 
         // Remove everything inside outputMBTiles
-        $this->cleanMbtiles();
+        // $this->cleanMbtiles();
 
         $project = $this->project->getJSON();
         $upload = $input->getOption('upload');
-
-        $output->writeln("<say>We're processing <high>" . count($project->Layer) . " layers</high> from geojsons to mbtiles!</say>");
 
         foreach ($project->Layer as $layer) {
 
