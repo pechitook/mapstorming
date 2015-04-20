@@ -1,11 +1,11 @@
 <?php namespace Mapstorming\Commands;
 
+use Mapstorming\CartoDB;
 use Mapstorming\City;
-use Mapstorming\Config;
+use Mapstorming\Config\Config;
+use Mapstorming\GeojsonHandler;
 use Mapstorming\Project;
-use Mapstorming\ValidableQuestion;
-use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Formatter\OutputFormatterStyle;
+use Mapstorming\ValidableQuestion\ValidableQuestion;
 use Symfony\Component\Console\Helper\Helper;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\Input;
@@ -13,7 +13,6 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\Output;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
-use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 
 
@@ -22,25 +21,27 @@ use Symfony\Component\Console\Question\ConfirmationQuestion;
  * @property Config config
  * @property mixed datasetsDirectory
  * @property City city
+ * @property CartoDB cartodb
+ * @property GeojsonHandler geojson
  */
 class ProcessDatasets extends MapstormingCommand {
 
     protected $data = [];
     protected $allCities;
 
-    protected function configure()
-    {
+    protected function configure() {
+        $this->geojson = new GeojsonHandler();
         $this->config = new Config();
+        $this->cartodb = new CartoDB();
         $this->project = new Project();
         $this->city = new City();
-        $this->datasetsDirectory = __DIR__ . '/../../tilemill_project/datasets/';
+        $this->datasetsDirectory = __DIR__ . '/../../../tilemill_project/datasets/';
 
         $this->setName('up')
             ->setDescription('Export mbtiles from geojson files and upload them to Mapbox');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
-    {
+    protected function execute(InputInterface $input, OutputInterface $output) {
         // Style the output
         $output = $this->setOutputFormat($output);
         // Style the output
@@ -64,7 +65,14 @@ class ProcessDatasets extends MapstormingCommand {
         // Make user select one of the cities
         $city = $this->selectCity($input, $output, $helper);
 
-        $datasetsDir = $this->datasetsDirectory . $city->bikestormingId . '/';
+
+        if ($this->askToDownloadFromCartoDB($input, $output, $helper)) {
+            $output->writeln("\n<say>Downloading data from <high>CartoDB</high>...</say>");
+            $this->downloadGeojsonsFromCartoDB($city);
+        }
+
+        $datasetsDir = $this->datasetsDirectory . $city->bkID . '/';
+
 
         if ($geojsons = $this->getGeojsonsInDirectory($datasetsDir)) {
             // Lets grab all datasets from the city's folder
@@ -75,18 +83,21 @@ class ProcessDatasets extends MapstormingCommand {
                 $layers = $this->addDatasets($input, $output, $helper, $layers);
             }
         } else {
-            $output->writeln("<error>There are no geojson files to process in 'tilemill_project/datasets/{$city->bikestormingId}' \nPlease add them and try again</error>");
+            $output->writeln("<error>There are no geojson files to process in 'tilemill_project/datasets/{$city->bkID}' \nPlease add them and try again</error>");
+
             return false;
         }
 
-        // Upload to Mapbox?
-        $question = new ConfirmationQuestion("\n<ask>Do you want to <high>upload</high> the resulting mbtiles to Mapbox? (yes/no): </ask>", false);
+        // Upload to S3?
+        $question = new ConfirmationQuestion("\n<ask>Do you want to <high>upload</high> the resulting mbtiles to production? (yes/no): </ask>", false);
         $upload = $helper->ask($input, $output, $question);
 
         foreach ($layers as $layer) {
-            
-            $this->project->create($city, $layer);
-            
+
+            $properties = $this->geojson->getProperties($layer, $city);
+
+            $this->project->create($city, $layer, $properties);
+
             if ($upload) {
                 $command = $this->getApplication()->find('export');
                 $arguments = array(
@@ -107,8 +118,7 @@ class ProcessDatasets extends MapstormingCommand {
     /**
      * @param OutputInterface $output
      */
-    protected function displayLoadedCities(OutputInterface $output)
-    {
+    protected function displayLoadedCities(OutputInterface $output) {
         $output->writeln("\n<say>Loading cities...</say>");
         // Actually call the remote DB to load the cities
         $this->allCities = $this->city->getAll();
@@ -128,8 +138,7 @@ class ProcessDatasets extends MapstormingCommand {
      * @param $helper
      * @return boolean
      */
-    protected function useLoadedCity(InputInterface $input, OutputInterface $output, $helper)
-    {
+    protected function useLoadedCity(InputInterface $input, OutputInterface $output, $helper) {
         $question = new ConfirmationQuestion("\n<ask>Do you want to use one of the above? (yes/no):</ask> ", false);
 
         return $helper->ask($input, $output, $question);
@@ -140,14 +149,13 @@ class ProcessDatasets extends MapstormingCommand {
      * @param OutputInterface $output
      * @param $helper
      */
-    protected function selectCity(InputInterface $input, OutputInterface $output, $helper)
-    {
+    protected function selectCity(InputInterface $input, OutputInterface $output, $helper) {
         $question = new ValidableQuestion("\n<say>Which city you want to work with? </say>", ['required']);
         // set autocompleter values to city names, including all lowercase
         $question->setAutocompleterValues(array_merge($this->city->getNames($this->allCities), $this->city->getNames($this->allCities, true)));
         $cityName = $helper->ask($input, $output, $question);
 
-        $output->writeln("\n<say>*** <high>$cityName</high> it is! ***</say>");
+        $output->writeln("\n<say>*** <high>" . ucwords($cityName) . "</high> it is! ***</say>");
 
         return $this->city->getByName($this->allCities, $cityName);
 
@@ -160,8 +168,7 @@ class ProcessDatasets extends MapstormingCommand {
      * @param $allLayers
      * @return array
      */
-    protected function addDatasets(InputInterface $input, OutputInterface $output, $helper, $allLayers)
-    {
+    protected function addDatasets(InputInterface $input, OutputInterface $output, $helper, $allLayers) {
         $layers = [];
         while ($res != 'done') {
             $question = new Question('<info>Which datasets do you want to process? </info>');
@@ -173,13 +180,6 @@ class ProcessDatasets extends MapstormingCommand {
                 return $layers;
             }
 
-            // if it is not a layer, show help
-            if (!in_array($res, $this->config->layers)) {
-                $output->writeln('<error>' . $res . ' is not a valid option.</error>');
-                $output->writeln('Type <info>done</info> when you are ready to move on.');
-                continue;
-            }
-
             $layers[] = $res;
             $output->writeln('<say>Added ' . $res . ' to the processing list.</say>');
         }
@@ -189,8 +189,7 @@ class ProcessDatasets extends MapstormingCommand {
      * @param $directory
      * @return array
      */
-    protected function getGeojsonsInDirectory($directory)
-    {
+    protected function getGeojsonsInDirectory($directory) {
         $files = array_diff(scandir($directory), ['..', '.', '.DS_Store']);
         $geojsons = [];
         foreach ($files as $file) {
@@ -200,19 +199,16 @@ class ProcessDatasets extends MapstormingCommand {
         return $geojsons;
     }
 
-    private function getLayersFromFileName($geojsons)
-    {
+    private function getLayersFromFileName($geojsons) {
         $layers = [];
         foreach ($geojsons as $file) {
-            preg_match('|[a-z]*_([a-zA-Z_]*).geojson|', $file, $res);
-            $layers[] = $res[1];
+            $layers[] = $this->getDatasetName($file);
         }
 
         return $layers;
     }
 
-    private function askToProcessAllLayers($layers, Input $input, Output $output, Helper $helper, $directory)
-    {
+    private function askToProcessAllLayers($layers, Input $input, Output $output, Helper $helper) {
         $output->writeln("\n<say>These are all the datasets ready to be processed:</say>");
         foreach ($layers as $layer) {
             $output->writeln("- $layer");
@@ -222,12 +218,27 @@ class ProcessDatasets extends MapstormingCommand {
         return $helper->ask($input, $output, $question);
     }
 
-    private function checkCitiesFolderExists($allCities)
-    {
+    private function askToDownloadFromCartoDB(Input $input, Output $output, Helper $helper) {
+        $question = new ConfirmationQuestion("\n<ask>Do you want to download the data form <high>CartoDB</high>? (yes/no): </ask>", false);
+
+        return $helper->ask($input, $output, $question);
+    }
+
+    private function checkCitiesFolderExists($allCities) {
         $files = array_diff(scandir($this->datasetsDirectory), ['..', '.', '.DS_Store']);
         foreach ($allCities as $city) {
-            if (!in_array($city->bikestormingId, $files)) {
-                mkdir($this->datasetsDirectory . $city->bikestormingId);
+            if (!in_array($city->bkID, $files)) {
+                @mkdir($this->datasetsDirectory . $city->bkID);
+                @mkdir($this->datasetsDirectory . $city->bkID . '/mbtiles');
+            }
+        }
+    }
+
+    private function downloadGeojsonsFromCartoDB($city) {
+        foreach ($this->config->layers as $layer) {
+            $geojson = $this->cartodb->downloadDataset($city->bkID, $layer);
+            if ($geojson) {
+                $this->geojson->saveDataset($layer, $city, json_encode($geojson));
             }
         }
     }

@@ -2,15 +2,17 @@
 namespace Mapstorming;
 
 
+use Mapstorming\Config\Config;
+
 class Project {
+
     protected $config;
-    
-    public function __construct(){
+
+    public function __construct() {
         $this->config = new Config();
     }
 
-    public function create($city, $layer){
-
+    public function create($city, $layer, $properties) {
         $output = new \StdClass();
 
         $output->bounds = [
@@ -26,9 +28,9 @@ class Project {
         ];
         $output->format = "png";
         $output->interactivity = new \StdClass();
-        $output->interactivity->layer = 'bk'.$city->bikestormingId.'_'.$layer;
+        $output->interactivity->layer = 'bk_' . $city->bkID . '_' . $layer;
         $output->interactivity->template_teaser = "";
-        $output->interactivity->template_full = "{{name}}";
+        $output->interactivity->template_full = $this->propertiesToXml($properties);
 
         $output->minzoom = $city->mapConfig->minZoom;
         $output->maxzoom = $city->mapConfig->maxZoom;
@@ -41,10 +43,10 @@ class Project {
         $l->extent = $output->bounds;
         $l->status = 'Off';
         // Must be the same as name, will be the mapbox id
-        $l->id = 'bk'.$city->bikestormingId.'_'.$layer;
+        $l->id = 'bk_' . $city->bkID . '_' . $layer;
         $l->class = $layer;
         $l->Datasource = new \StdClass();
-        $l->Datasource->file = 'datasets/'.$city->bikestormingId.'/bk'.$city->bikestormingId.'_'.$layer.'.geojson';
+        $l->Datasource->file = 'datasets/' . $city->bkID . '/bk_' . $city->bkID . '_' . $layer . '.geojson';
         $l->Datasource->id = $layer;
         $l->Datasource->project = '';
         $l->Datasource->srs = '';
@@ -52,7 +54,7 @@ class Project {
         $l->srs = '';
         $l->advanced = new \StdClass();
         // Must be the same as id, will be the mapbox id
-        $l->name = 'bk'.$city->bikestormingId.'_'.$layer;
+        $l->name = 'bk_' . $city->bkID . '_' . $layer;
         array_push($output->Layer, $l);
 
         $output->scale = 2;
@@ -66,11 +68,19 @@ class Project {
 
     }
 
-    public function getJSON(){
-        return json_decode(file_get_contents(__DIR__.'/../tilemill_project/template/project.mml'));
+    public function getJSON() {
+        return json_decode(file_get_contents(__DIR__ . '/../../tilemill_project/template/project.mml'));
     }
 
-    public function save($project){
-        file_put_contents(__DIR__.'/../tilemill_project/template/project.mml', json_encode($project));
+    public function save($project) {
+        file_put_contents(__DIR__ . '/../../tilemill_project/template/project.mml', json_encode($project));
+    }
+
+    private function propertiesToXml($properties) {
+        $xml = "";
+        foreach ($properties as $property) {
+            $xml .= "<$property>{{".$property."}}</$property>";
+        }
+        return $xml;
     }
 }

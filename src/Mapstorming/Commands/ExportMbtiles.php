@@ -11,8 +11,9 @@ namespace Mapstorming\Commands;
 
 use Geocoder\Exception\InvalidArgumentException;
 use Mapstorming\City;
-use Mapstorming\Config;
+use Mapstorming\Config\Config;
 use Mapstorming\Project;
+use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -25,8 +26,11 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class ExportMbtiles extends MapstormingCommand {
 
-    protected function configure()
-    {
+	protected $input;
+	protected $output;
+	protected $projectPath;
+
+    protected function configure() {
         $this->config = new Config();
         $this->accessToken = getenv('TILEMILL_ACCESS_TOKEN');
         $this->city = new City();
@@ -55,12 +59,13 @@ class ExportMbtiles extends MapstormingCommand {
             );
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
-    {
+    protected function execute(InputInterface $input, OutputInterface $output) {
+	    $this->input = $input;
         $this->projectPath = $this->configTilemill['tileMillDocumentPath'] . $this->configTilemill['projectName'] . '/';
         if (!$this->projectPath) throw new InvalidArgumentException;
         // Style the output
         $output = $this->setOutputFormat($output);
+	    $this->output = $output;
         // Helper to ask questions through Console
         $helper = $this->getHelper('question');
 
@@ -91,22 +96,20 @@ class ExportMbtiles extends MapstormingCommand {
             $this->exportLayer($layer);
 
             if ($upload) {
-                $output->writeln("<say>Uploading <high>{$layer->name}...</high></say>");
                 $this->uploadLayer($layer);
                 $output->writeln("<say>Uploaded <high>{$layer->name}</high> successfully</say>");
 
                 // Add layer to city's document on DB
-                $output->writeln("<say>Adding <high>{$layer->name}</high> to DB...</say>");
+                $output->writeln("<say>Updating <high>{$layer->name}</high> in API...</say>");
                 $this->city->addLayer($this->getDatasetName($layer->name), $this->city->getById($this->getCityId($layer->name)));
                 $output->writeln("<ask>Done!</ask>");
             }
         }
 
-        $output->writeln("\n<say>VAMO ARRIBA! All layers have been <ask>successfully uploaded</ask> to <high>{$this->configTilemill['syncAccount']}'s</high> Mapbox account</say>");
+        $output->writeln("\n<say>VAMO ARRIBA! All layers have been <ask>successfully exported</ask></say>");
     }
 
-    private function turnAllLayersExcept($project, $layer)
-    {
+    private function turnAllLayersExcept($project, $layer) {
         foreach ($project->Layer as $key => $l) {
             if ($l->name != $layer->name) {
                 $l->status = 'Off';
@@ -118,59 +121,42 @@ class ExportMbtiles extends MapstormingCommand {
         return $project;
     }
 
-    private function exportLayer($layer)
-    {
-        $config = $this->configTilemill;
-        $commands = [
-            "cd " . $config['tileMillPath']
-        ];
-        $commands[] = './index.js export --verbose=off ' . $config['projectName'] . ' ' . $config['outputMBTiles'] . '/' . $layer->name . '.mbtiles --format=mbtiles';
+    private function exportLayer($layer) {
 
+        $city = $this->getCityId($layer->name);
+        $outputPath = $this->config->fullpath . "tilemill_project/datasets/$city/mbtiles";
+
+        $config = $this->configTilemill;
+        $commands[] = "cd " . $config['tileMillPath'];
+        $commands[] = './index.js export --verbose=off ' . $config['projectName'] . ' ' . $outputPath . '/' . $layer->name . '.mbtiles --format=mbtiles';
         system(implode('&&', $commands));
     }
 
-    private function uploadLayer($layer)
-    {
-        $config = $this->configTilemill;
-        $commands = [
-            "cd " . $config['tileMillPath'],
-            './index.js export --verbose=off ' . $layer->name . ' ' . $config['outputMBTiles'] . '/' . $layer->name . '.mbtiles --format=upload --syncAccessToken="'.$this->accessToken.'" --syncAccount=' . $config["syncAccount"]
-        ];
+    private function uploadLayer($layer) {
+	    $command = $this->getApplication()->find('upload');
+	    $input = new ArrayInput(array(
+		    'command' => 'upload',
+		    'city'  => $this->getCityId($layer->name),
+		    'dataset' => $this->getDatasetName($layer->name),
+	    ));
 
-        system(implode('&&', $commands));
-        //  . ' 2>/dev/null 1>&2'
+	    return $command->run($input, $this->output);
     }
 
-    protected function copyProjectData()
-    {
+    protected function copyProjectData() {
         exec("cp -r '{$this->configTilemill['projectTemplate']}'/* {$this->projectPath}");
     }
 
-    protected function copyDatasets()
-    {
+    protected function copyDatasets() {
         exec("cp -r '{$this->configTilemill['datasetPath']}' {$this->projectPath}");
     }
 
-    protected function emptyProjectPath()
-    {
+    protected function emptyProjectPath() {
         exec('rm -rf ' . $this->projectPath . '*');
     }
 
-    protected function cleanMbtiles()
-    {
+    protected function cleanMbtiles() {
         exec('rm -rf ' . $this->configTilemill['outputMBTiles'] . '/*');
-    }
-
-    private function getDatasetName($layer)
-    {
-        preg_match('|bk[a-zA-Z]*_([a-zA-Z_]*)|', $layer, $res);
-        return $res[1];
-    }
-
-    private function getCityId($layer)
-    {
-        preg_match('|bk([a-zA-Z]*)_|', $layer, $res);
-        return $res[1];
     }
 
 }

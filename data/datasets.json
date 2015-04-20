@@ -1,0 +1,185 @@
+{
+    "all_datasets": [
+        "air_pumps",
+        "bike_rental",
+        "bike_shelters",
+        "bikeshops",
+        "cycleway_network",
+        "cobblestone",
+        "edu",
+        "free_wifi",
+        "hotels",
+        "massive_parkings",
+        "planned_cycleway",
+        "public_bikes",
+        "public_benches",
+        "racks",
+        "rewards",
+        "rides_points",
+        "rides_trails",
+        "safe_parkings",
+        "stolen_bikes",
+        "subway_stations",
+        "subway_tracks",
+        "train_tracks",
+        "train_stations",
+        "weekend_cycleway",
+        "wifi_venue"
+    ],
+    "required_fields": {
+        "air_pumps": [
+            "name",
+            "description",
+            "comment"
+        ],
+        "bike_rental": [
+            "name",
+            "address",
+            "phone",
+            "email",
+            "url"
+        ],
+        "bike_shelters": [
+            "address"
+        ],
+        "bikeshops": [
+            "name",
+            "address",
+            "url"
+        ],
+        "cycleway_network": [
+            "category",
+            "name"
+        ],
+        "cobble_stone": [
+            "name"
+        ],
+        "edu": [
+            "category",
+            "name"
+        ],
+        "free_wifi": [
+            "venue",
+            "address",
+            "network"
+        ],
+        "hotel": [
+            "name",
+            "address",
+            "phone",
+            "email",
+            "url"
+        ],
+        "massive_parkings": [
+            "name",
+            "address"
+        ],
+        "planned_cycleway": [
+            "name",
+            "feature_announced",
+            "feature_announced_source"
+        ],
+        "public_benches": [
+            "address",
+            "feature_type"
+        ],
+        "public_bikes": [
+            "name",
+            "address",
+            "capacity"
+        ],
+        "racks": [
+            "venue",
+            "address",
+            "capacity"
+        ],
+        "rewards": [
+            "name",
+            "reward",
+            "address",
+            "url"
+        ],
+        "rides_points": [
+            "category",
+            "name",
+            "description",
+            "url"
+        ],
+        "rides_trails": [
+            "category",
+            "name",
+            "description",
+            "url"
+        ],
+        "safe_parkings": [
+            "address",
+            "description"
+        ],
+        "stolen_bikes": [
+            "address",
+            "description",
+            "date",
+            "victim"
+        ],
+        "subway_stations": [
+            "name",
+            "name_line"
+        ],
+        "subway_tracks": [
+            "name"
+        ],
+        "train_stations": [
+            "name",
+            "name_line",
+            "name_network"
+        ],
+        "train_tracks": [
+            "name",
+            "name_network"
+        ],
+        "weekend_cycleway": [
+            "name",
+            "schedule",
+            "url"
+        ],
+        "wifi_venue": [
+            "name",
+            "address",
+            "url"
+        ]
+    },
+    "optional_fields": {
+        "bikeshops": [
+            "phone"
+        ],
+        "cycleways_network": [
+            "feature_one_way",
+            "feature_traffic_flow",
+            "feature_segregation_yes_or_no",
+            "feature_segregation_element",
+            "feature_sufrace_type",
+            "feature_sufrace_quality",
+            "feature_on_street",
+            "feature_width",
+            "feature_lanes_count",
+            "feature_tilt",
+            "feature_lit",
+            "feature_shadowed",
+            "feature_sharrow",
+            "feature_painted",
+            "feature_inclination",
+            "feature_street_placement",
+            "feature_shared_with_cars",
+            "feature_shared_with_peds",
+            "feature_lenght",
+            "street_type",
+            "street_from",
+            "street_to",
+            "street_transit",
+            "street_max_speed",
+            "street_public_transport",
+            "user_feedback_comments",
+            "user_feedback_rating"
+        ]
+    }
+}

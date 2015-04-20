@@ -583,7 +583,7 @@
 /**  ———————————————————————————————————————————— 7 BIKESHOP —————————————————————— **/  
 
 
-.bike_shop {
+.bikeshops {
   marker-line-width:0;
   marker-opacity:0.7;
   marker-fill:#2ba0ff;
@@ -703,7 +703,7 @@
 /**  ———————————————————————————————————————————— 9 PUBLIC BIKE —————————————————————— **/  
 
 
-.public_bike {
+.public_bikes {
   marker-line-width:0;
   marker-opacity:0.7;
   marker-fill:#ffffff;

@@ -1,17 +1,27 @@
 {
     "name": "bikestorming/mapstorming",
-    "description": "MAPSTORMIN MADAFACA",
+    "description": "Mapstorming",
     "require": {
         "symfony/console": "dev-master",
         "guzzle/guzzle": "3.9.*@dev",
-        "guzzlehttp/cache-subscriber": "0.1.*@dev"
+        "guzzlehttp/cache-subscriber": "0.1.*@dev",
+        "aws/aws-sdk-php": "2.7.*@dev",
+        "league/flysystem": "1.0.*"
     },
     "autoload": {
-        "psr-4": {
-            "Mapstorming\\": "src/"
+        "psr-0": {
+            "Mapstorming": "src/"
         }
     },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Pablo Chiappetti",
+            "email": "pchiappetti@gmail.com"
+        }
+    ],
     "bin": [
         "mapstorming"
-    ]
+    ],
+    "minimum-stability": "stable"
 }

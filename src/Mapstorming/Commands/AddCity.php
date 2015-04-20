@@ -1,8 +1,8 @@
 <?php namespace Mapstorming\Commands;
 
 use Mapstorming\City;
-use Mapstorming\Config;
-use Mapstorming\ValidableQuestion;
+use Mapstorming\Config\Config;
+use Mapstorming\ValidableQuestion\ValidableQuestion;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
@@ -23,13 +23,7 @@ class AddCity extends MapstormingCommand {
         $this->city = new City();
 
         $this->setName('open')
-            ->setDescription('Add a new City')
-//             ->addArgument(
-//                 'directory',
-//                 InputArgument::OPTIONAL,
-//                 'Full path to the geojsons you want to process'
-//             )
-        ;
+            ->setDescription('Add a new City');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -46,17 +40,16 @@ class AddCity extends MapstormingCommand {
         // City Name
         $question = new ValidableQuestion("<ask><high>Name</high> of the city?: </ask>", ["required"]);
         $city->name = $helper->ask($input, $output, $question);
-        $city->localName = $city->name;
+        $city->local_name = $city->name;
 
         // Country
         $question = new ValidableQuestion("<ask>Which <high>Country</high> is it in?: </ask>", ["required"]);
-        $city->country = new \StdClass();
-        $city->country->name = $helper->ask($input, $output, $question);
+        $city->country_name = $helper->ask($input, $output, $question);
 
         // Bikestorming ID
         $question = new ValidableQuestion("<ask>Bikestorming ID? (ba, bgt, crml, etc...): </ask>", ["required"]);
         $bkid = $helper->ask($input, $output, $question);
-        $city->bikestormingId = strtolower($bkid);
+        $city->bk_id = strtolower($bkid);
 
         // Boundaries
         $output->writeln("\n***");
@@ -73,7 +66,7 @@ class AddCity extends MapstormingCommand {
         // Center
         $output->writeln("\n***");
         $output->writeln("<say>What about the center of the city?</say>");
-        $output->writeln("<ask>Please go to <high>http://geojson.io/#map=12/{$city->bounds->SWLat}/{$city->bounds->SWLng}</high> and center the city on the map. \n\nWhen you're done, <high>copy the url</high> and paste it here <high>↓</high></ask>");
+        $output->writeln("<ask>Please go to <high>http://geojson.io/#map=12/{$city->SWLat}/{$city->SWLng}</high> and center the city on the map. \n\nWhen you're done, <high>copy the url</high> and paste it here <high>↓</high></ask>");
 
         $centerUrl = $helper->ask($input, $output, new Question("<ask>URL: </ask>"));
         $city = $this->setCenterFromUrl($city, $centerUrl);
@@ -82,14 +75,13 @@ class AddCity extends MapstormingCommand {
         // Display information, wait for confirmation
         $output->writeln("\n<say>Please review <high>{$city->name}'s</high> information:</say>");
         $output->writeln("<ask>Name:</ask> {$city->name}");
-        $output->writeln("<ask>Country:</ask> {$city->country->name}");
-        $output->writeln("<ask>Bikestorming ID:</ask> {$city->bikestormingId}");
+        $output->writeln("<ask>Country:</ask> {$city->name}");
+        $output->writeln("<ask>Bikestorming ID:</ask> {$city->bk_id}");
 
         $confirm = $helper->ask($input, $output, new ConfirmationQuestion("\n<ask>Is this correct? (yes/no): </ask>", true));
 
         // Default extra values
-        $city->atlasImage = "placeholder";
-        $city->layers = new \StdClass();
+        $city->atlas_image = "placeholder";
 
         // Add the city
         if ($confirm){
@@ -99,7 +91,7 @@ class AddCity extends MapstormingCommand {
                 die();
             }
 
-            $this->createDatasetsDirectory($city->bikestormingId);
+            $this->createDatasetsDirectory($city->bk_id);
             $output->writeln("<high>Whooho, {$city->name} is now part of Bikestorming!</high>");
         }else{
             $output->writeln("\n<error>We need to start over then :(</error>");
@@ -109,11 +101,10 @@ class AddCity extends MapstormingCommand {
     private function addCityBoundaries($city, $boundaries)
     {
         $points = json_decode($boundaries)[0];
-        $city->bounds = new \StdClass();
-        $city->bounds->SWLng = (double)$points[0][0];
-        $city->bounds->SWLat = (double)$points[0][1];
-        $city->bounds->NELng = (double)$points[2][0];
-        $city->bounds->NELat = (double)$points[2][1];
+        $city->SWLng = (double)$points[0][0];
+        $city->SWLat = (double)$points[0][1];
+        $city->NELng = (double)$points[2][0];
+        $city->NELat = (double)$points[2][1];
 
         return $city;
 
@@ -123,20 +114,19 @@ class AddCity extends MapstormingCommand {
     {
         $parsed = explode('/', parse_url($url)["fragment"]);
 
-        $city->mapConfig = new \StdClass();
         $centerZoom = (int)str_replace('map=', '', $parsed[0]);
-        $city->mapConfig->centerZoom = ($centerZoom > 11) ? $centerZoom : 11;
-        $city->mapConfig->centerLat = (double) $parsed[1];
-        $city->mapConfig->centerLng = (double) $parsed[2];
-        $city->mapConfig->minZoom = 11;
-        $city->mapConfig->maxZoom = 17;
+        $city->center_zoom = ($centerZoom > 11) ? $centerZoom : 11;
+        $city->center_lat = (double) $parsed[1];
+        $city->center_lng = (double) $parsed[2];
+        $city->min_zoom = 11;
+        $city->max_zoom = 17;
 
         return $city;
     }
 
-    private function createDatasetsDirectory($bikestormingId)
+    private function createDatasetsDirectory($bk_id)
     {
-        mkdir(__DIR__.'/../../tilemill_project/datasets/'.$bikestormingId);
+        mkdir(__DIR__.'/../../../tilemill_project/datasets/'.$bk_id);
     }
 
 }

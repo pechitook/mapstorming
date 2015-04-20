@@ -5,6 +5,11 @@ set_time_limit(0);
 if (!getenv('IS_DEBUG')) error_reporting(E_STRICT);
 require 'vendor/autoload.php';
 
+function dd($thing){
+    var_dump($thing);
+    die();
+}
+
 use Mapstorming\Commands\ActivateCityCommand;
 use Mapstorming\Commands\AddCity;
 use Mapstorming\Commands\DeleteCity;
@@ -13,6 +18,8 @@ use Mapstorming\Commands\ExportMbtiles;
 use Mapstorming\Commands\MainMenu;
 use Mapstorming\Commands\ProcessDatasets;
 use Mapstorming\Commands\Scrap;
+use Mapstorming\Commands\Transform;
+use Mapstorming\Commands\UploadMbtiles;
 use Symfony\Component\Console\Application;
 
 $menu = new MainMenu();
@@ -22,6 +29,7 @@ $application->setDefaultCommand($menu->getName());
 $application->setVersion(0.1);
 
 $application->add($menu);
+$application->add(new Transform());
 $application->add(new ProcessDatasets());
 $application->add(new AddCity());
 $application->add(new EditCity());
@@ -29,5 +37,6 @@ $application->add(new ActivateCityCommand());
 $application->add(new DeleteCity());
 $application->add(new ExportMbtiles());
 $application->add(new Scrap());
+$application->add(new UploadMbtiles());
 
 $application->run();

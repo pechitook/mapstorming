@@ -9,7 +9,7 @@
 namespace Mapstorming\Commands;
 
 
-use Mapstorming\ValidableQuestion;
+use Mapstorming\ValidableQuestion\ValidableQuestion;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 

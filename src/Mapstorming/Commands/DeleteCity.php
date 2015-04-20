@@ -1,7 +1,7 @@
 <?php namespace Mapstorming\Commands;
 
 use Mapstorming\City;
-use Mapstorming\Config;
+use Mapstorming\Config\Config;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;

@@ -8,11 +8,13 @@
 
 namespace Mapstorming\Commands;
 
+use Mapstorming\CartoDB;
 use Mapstorming\City;
-use Mapstorming\Config;
+use Mapstorming\Config\Config;
 use Mapstorming\DB;
+use Mapstorming\GeojsonHandler;
 use Mapstorming\Scrappers\ScrapperFactory;
-use Mapstorming\ValidableQuestion;
+use Mapstorming\ValidableQuestion\ValidableQuestion;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -25,11 +27,13 @@ use Symfony\Component\Console\Question\ChoiceQuestion;
  * @property Config config
  */
 class Scrap extends MapstormingCommand {
+
     protected $allCities;
 
-    public function configure()
-    {
+    public function configure() {
+        $this->geojson = new GeojsonHandler();
         $this->config = new Config();
+        $this->cartodb = new CartoDB();
         $this->city = new City();
 
         $this->setName('get')
@@ -39,8 +43,7 @@ class Scrap extends MapstormingCommand {
             ->addOption('source', 's', InputOption::VALUE_OPTIONAL, 'Source of the data (foursquare, google, OSM)');
     }
 
-    public function execute(InputInterface $input, OutputInterface $output)
-    {
+    public function execute(InputInterface $input, OutputInterface $output) {
         $output = $this->setOutputFormat($output);
         $helper = $this->getHelper('question');
 
@@ -52,13 +55,13 @@ class Scrap extends MapstormingCommand {
         $cityId = $input->getArgument('cityId');
         $source = $input->getOption('source');
 
-        if (! $dataset || ! $cityId || ! $source) {
+        if (!$dataset || !$cityId || !$source) {
             // Get the City ID
-            $question = new ValidableQuestion("<ask>Which city do you want to get datasets to?: </ask>", ['required']);
+            $question = new ValidableQuestion("<ask>Which city do you want to get datasets for?: </ask>", ['required']);
             // set autocompleter values to city names, including all lowercase
             $question->setAutocompleterValues(array_merge($this->city->getNames($this->allCities), $this->city->getNames($this->allCities, true)));
             $cityName = $helper->ask($input, $output, $question);
-            $cityId = $this->city->getByName($this->allCities, $cityName)->bikestormingId;
+            $cityId = $this->city->getByName($this->allCities, $cityName)->bkID;
 
             // Get the Dataset
             $question = new ValidableQuestion("<ask>Which dataset do you want to get?: </ask>", ['required']);
@@ -67,7 +70,7 @@ class Scrap extends MapstormingCommand {
 
             // Get the source
             $sources = $this->config->scrapSourcesFor($dataset);
-            if (!$sources){
+            if (!$sources) {
                 $output->writeln("<error>We don't have scrappers for that dataset, YET</error>");
                 die();
             }
@@ -76,21 +79,18 @@ class Scrap extends MapstormingCommand {
 
         }
 
-        $output->writeln("\n<say>Getting <high>$dataset</high> from <high>$source</high> for <high>".strtoupper($cityId)."</high>... Please stand by.</say>");
+        $output->writeln("\n<say>Getting <high>$dataset</high> from <high>$source</high> for <high>" . strtoupper($cityId) . "</high>... Please stand by.</say>");
         $scrapper = ScrapperFactory::getInstance($source);
         $data = $scrapper->scrap($cityId, $dataset, $input, $output);
 
         $countItems = count(json_decode($data)->features);
-        $savedFile = $this->saveDataset($dataset, $this->city->getById($cityId), $data);
-
-        $output->writeln("<ask>$countItems items saved to $savedFile");
+        $fullpath = $this->geojson->getGeojsonFullpath($dataset, $this->city->getById($cityId));
+        $this->geojson->saveDataset($dataset, $this->city->getById($cityId), $data);
+        $this->uploadToCartoDB($fullpath);
+        $output->writeln("<ask>$countItems items saved to $fullpath");
     }
 
-    private function saveDataset($dataset, $city, $data)
-    {
-        $filename = 'bk'.$city->bikestormingId.'_'.$dataset.'.geojson';
-        file_put_contents(__DIR__.'/../../tilemill_project/datasets/'.$city->bikestormingId.'/'.$filename, $data);
-        return $filename;
+    private function uploadToCartoDB($fullpath) {
+        $this->cartodb->uploadGeoJSON($fullpath);
     }
-
 }

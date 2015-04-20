@@ -5,7 +5,7 @@ namespace Mapstorming\Scrappers;
 
 use GuzzleHttp\Subscriber\Cache\CacheSubscriber;
 use Mapstorming\City;
-use Mapstorming\ValidableQuestion;
+use Mapstorming\ValidableQuestion\ValidableQuestion;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 

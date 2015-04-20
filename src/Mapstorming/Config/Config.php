@@ -1,4 +1,4 @@
-<?php namespace Mapstorming;
+<?php namespace Mapstorming\Config;
 
 class Config {
 
@@ -6,29 +6,35 @@ class Config {
     {
         $this->fullpath = getenv('FULLPATH');
         $this->layers = [
-            'bike_shop',
-            'safe_parking',
-            'air_pump',
-            'free_wifi',
-            'wifi_venues',
-            'cyclestreet',
-            'cycleway',
-            'weekend_cycleway',
-            'cycleroute',
-            'cobblestone',
-            'heavy_transit',
-            'cyclefriendly_street',
-            'heights',
-            'racks',
-            'ferry',
-            'subway',
-            'train',
-            'rewards',
-            'public_bike',
+            "air_pumps",
+            "bike_rental",
+            "bike_shelters",
+            "bikeshops",
+            "cycleway_network",
+            "cobblestone",
+            "edu",
+            "free_wifi",
+            "hotels",
+            "massive_parkings",
+            "planned_cycleway",
+            "public_bikes",
+            "public_benches",
+            "racks",
+            "rewards",
+            "rides_points",
+            "rides_trails",
+            "safe_parkings",
+            "stolen_bikes",
+            "subway_stations",
+            "subway_tracks",
+            "train_tracks",
+            "train_stations",
+            "weekend_cycleway",
+            "wifi_venue"
         ];
 
         $this->layerRender = [
-            'bike_shop' => 'point',
+            'bikeshops' => 'point',
             'safe_parking' => 'point',
             'air_pump' => 'point',
             'free_wifi' => 'point',
@@ -46,7 +52,7 @@ class Config {
             'subway' => 'point',
             'train' => 'point',
             'rewards' => 'point',
-            'public_bike' => 'point',  
+            'public_bikes' => 'point',
         ];
 
         $this->scrapSources = [
