@@ -30,7 +30,7 @@ class CartoDB {
 
     public function downloadDataset($city, $dataset) {
         try {
-            $res = $this->guzzlehttp->get('http://bkx.cartodb.com/api/v2/sql?format=geojson&q=SELECT%20*%20FROM%20bk_' . $city . '_' . $dataset);
+            $res = $this->guzzlehttp->get('http://bkx.cartodb.com/api/v2/sql?format=geojson&q=SELECT%20*%20FROM%20bk_' . $city . '_' . $dataset . '_master');
         } catch (RequestException $e) {
             if ($e->getCode() == 400) return false;
         }
