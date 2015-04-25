@@ -99,7 +99,7 @@ class City
 
 	public function addLayer($dataset, $city)
 	{
-		$this->client->post('http://api.bikestorming.com/cities', [
+		$this->client->post('http://api.bikestorming.com/cities/'.$city.'/layers', [
 			'json' => [
 				'name' => $dataset,
 				'download_url' => "https://s3.amazonaws.com/bk-mbtiles/bk_{$city}_{$dataset}.mbtiles",
