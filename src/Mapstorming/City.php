@@ -41,7 +41,14 @@ class City
 
 	public function getAll()
 	{
-		$response = $this->client->get('http://api.bikestorming.com/cities');
+		try
+		{
+			$response = $this->client->get('http://api.bikestorming.com/cities');
+		}
+		catch(\Exception $e)
+		{
+			die("\033[1;31mThere was an error trying to connect to Mother Ship.\nDo you have internet?\n");
+		}
 
 		return json_decode($response->getBody())->data;
 	}
