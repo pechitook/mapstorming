@@ -63,7 +63,7 @@ class City
 		$cities = $this->isCitiesSet($cities);
 		foreach ($cities as $city)
 		{
-			if ($city->bk_id == $cityId)
+			if ($city->bkID == $cityId)
 			{
 				return $city;
 			}
