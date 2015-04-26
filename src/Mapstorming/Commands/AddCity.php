@@ -56,7 +56,7 @@ class AddCity extends MapstormingCommand {
         $output->writeln("<say>Great. Now, let's set some boundaries:</say>");
         $output->writeln("<ask>Please go to <high>http://boundingbox.klokantech.com/</high> and copy the boundaries in <high>geojson</high> format</ask>");
         $output->writeln("<ask>It should start with <high>[[[</high> followed by many, many numbers.</ask>");
-        $helper->ask($input, $output, new ConfirmationQuestion("\n<ask>Press enter when you're ready. I'll be right here <high>:)</high> </ask>"));
+        // $helper->ask($input, $output, new ConfirmationQuestion("\n<ask>Press enter when you're ready. I'll be right here <high>:)</high> </ask>"));
         $output->writeln("\n<say>Got it? Amazing! Please paste it down here <high>↓</high></say>");
 
         $question = new ValidableQuestion("<ask>Weird code: </ask>", ["required"]);
@@ -94,7 +94,7 @@ class AddCity extends MapstormingCommand {
             $this->createDatasetsDirectory($city->bk_id);
             $output->writeln("<high>Whooho, {$city->name} is now part of Bikestorming!</high>");
         }else{
-            $output->writeln("\n<error>We need to start over then :(</error>");
+            $output->writeln("\n<error>Ooops, then we need to start over :(</error>");
         }
     }
 
