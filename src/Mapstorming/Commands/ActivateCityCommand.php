@@ -40,7 +40,7 @@ class ActivateCityCommand extends MapstormingCommand {
         // Helper to ask questions through Console
         $helper = $this->getHelper('question');
         // Welcome message
-        $output->writeln("\n<say>Let me grab all the inactive cities from the <high>DB</high>...</say>");
+        $output->writeln("\n<say>Let me grab all the unactive cities from the <high>DB</high>...</say>");
 
 
         // Get cities from DB
