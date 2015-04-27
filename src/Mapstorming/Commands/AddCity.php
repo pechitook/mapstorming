@@ -127,6 +127,7 @@ class AddCity extends MapstormingCommand {
     private function createDatasetsDirectory($bk_id)
     {
         @mkdir(__DIR__.'/../../../tilemill_project/datasets/'.$bk_id);
+        @mkdir(__DIR__.'/../../../tilemill_project/datasets/'.$bk_id.'/mbtiles');
     }
 
 }
