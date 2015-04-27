@@ -62,6 +62,9 @@ class Config {
             'cycleway' => [
                 'overpassturbo'
             ],
+            'cycleway_network' => [
+                'overpassturbo'
+            ],
             'bike_shop' => [
                 'overpassturbo'
             ],

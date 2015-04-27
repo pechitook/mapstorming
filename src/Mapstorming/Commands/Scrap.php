@@ -25,6 +25,8 @@ use Symfony\Component\Console\Question\ChoiceQuestion;
  * @property ScrapperFactory scrapper
  * @property City city
  * @property Config config
+ * @property CartoDB cartodb
+ * @property GeojsonHandler geojson
  */
 class Scrap extends MapstormingCommand {
 
@@ -87,10 +89,16 @@ class Scrap extends MapstormingCommand {
         $fullpath = $this->geojson->getGeojsonFullpath($dataset, $this->city->getById($cityId));
         $this->geojson->saveDataset($dataset, $this->city->getById($cityId), $data);
         $this->uploadToCartoDB($fullpath);
-        $output->writeln("<ask>$countItems items saved to $fullpath");
+        $output->writeln("<ask>$countItems items saved to ".$this->getCartoDBUrl($fullpath, $cityId));
     }
 
     private function uploadToCartoDB($fullpath) {
         $this->cartodb->uploadGeoJSON($fullpath);
     }
+
+	private function getCartoDBUrl($fullpath, $cityId)
+	{
+		$dataset = $this->getDatasetName($fullpath);
+		return 'https://bkx.cartodb.com/tables/'.$this->getFilename($cityId, $dataset);
+	}
 }
