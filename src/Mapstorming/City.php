@@ -28,12 +28,17 @@ class City
 
 	public function __construct()
 	{
-		$this->client = new Client();
+		$this->client = new Client([
+			'base_url' => 'http://api.bikestorming.com',
+			'defaults' => [
+				'auth' => [getenv('BK_USER'), getenv('BK_PASS')]
+			]
+		]);
 	}
 
 	public function add($city)
 	{
-		$response = $this->client->post('http://api.bikestorming.com/cities', ['json' => $city]);
+		$response = $this->client->post('/cities', ['json' => $city]);
 		if ($response->getStatusCode() == 200) return true;
 
 		return false;
@@ -43,7 +48,7 @@ class City
 	{
 		try
 		{
-			$response = $this->client->get('http://api.bikestorming.com/cities');
+			$response = $this->client->get('/cities');
 		}
 		catch(\Exception $e)
 		{
@@ -106,7 +111,7 @@ class City
 
 	public function addLayer($dataset, $city)
 	{
-		$this->client->post('http://api.bikestorming.com/cities/'.$city.'/layers', [
+		$this->client->post('/cities/'.$city.'/layers', [
 			'json' => [
 				'name' => $dataset,
 				'download_url' => "https://s3.amazonaws.com/bk-mbtiles/bk_{$city}_{$dataset}.mbtiles",
@@ -134,14 +139,23 @@ class City
 
 	public function activate($city)
 	{
-		$db = $this->getDB();
-		$db->changeValue('active', true, 'cities', ['bkID' => $city->bkID]);
+		try
+		{
+			$response = $this->client->post('/cities/'.$city->bkID.'/activate');
+		}
+		catch(\Exception $e)
+		{
+			die("\033[1;31mThere was an error trying to connect to Mother Ship.\nDo you have internet?\n");
+		}
+		// MONGO
+		// $db = $this->getDB();
+		// $db->changeValue('active', true, 'cities', ['bkID' => $city->bkID]);
 	}
 
 	public function setOrder($city, $order)
 	{
-		$db = $this->getDB();
-		$db->changeValue('order', $order, 'cities', ['bkID' => $city->bkID]);
+		// $db = $this->getDB();
+		// $db->changeValue('order', $order, 'cities', ['bkID' => $city->bkID]);
 	}
 
 	private function getDB()
