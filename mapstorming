@@ -10,6 +10,7 @@ function dd($thing){
     die();
 }
 
+
 use Mapstorming\Commands\ActivateCityCommand;
 use Mapstorming\Commands\AddCity;
 use Mapstorming\Commands\DeleteCity;
@@ -22,7 +23,7 @@ use Mapstorming\Commands\Transform;
 use Mapstorming\Commands\UploadMbtiles;
 use Symfony\Component\Console\Application;
 
-$menu = new MainMenu();
+$menu = new MainMenu;
 $application = new Application();
 $application->setName('Mapstorming');
 $application->setDefaultCommand($menu->getName());

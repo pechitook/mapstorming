@@ -2,7 +2,7 @@
     "name": "bikestorming/mapstorming",
     "description": "Mapstorming",
     "require": {
-        "symfony/console": "dev-master",
+        "symfony/console": "2.8.*@dev",
         "guzzle/guzzle": "3.9.*@dev",
         "guzzlehttp/cache-subscriber": "0.1.*@dev",
         "aws/aws-sdk-php": "2.7.*@dev",

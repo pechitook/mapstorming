@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: pablochiappetti
- * Date: 10/6/14
- * Time: 15:51
- */
 
 namespace Mapstorming\Commands;
 
